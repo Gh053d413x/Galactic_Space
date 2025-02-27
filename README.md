@@ -19,7 +19,7 @@ Will be showed off at CSU Spur for the DSST: STEM Showcase
 
 ## To Do List
 
-1.) Show off game at DSST: Stem Showcase + get suggestions
-2.) Fix up bugs
-3.) Implement Suggestions
-4.) Upload to Github and Publish it
+- 1.) Show off game at DSST: Stem Showcase + get suggestions
+- 2.) Fix up bugs
+- 3.) Implement Suggestions
+- 4.) Upload to Github and Publish it
