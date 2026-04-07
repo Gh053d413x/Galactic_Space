@@ -5,90 +5,50 @@
 VER = "dev_build.3"
 
 import os
-import time
 import pygame
-import json
-import tkinter.messagebox
 
-WIN_PATH = os.getcwd()
+from config import *
+from assets import *
 
-FPS = pygame.Clock()
+import player
 
-class screen:
-    class size:
-        w = 922
-        h = 691
+FPS = pygame.time.Clock()
 
-class game:
+
+class Game:
+    title = "Galactic Space"
     running = True
+    players = []
 
-class __unscaled__:
-    """Base Class for Unscaled Textures, Only use for scaling!"""
-    player0_unscaled = pygame.image.load(f"{WIN_PATH}/textures/player/player0.png")
-    
-class textures:
-    """Base Class for Textures"""
-    class player:
-        """Sprites Class for Textures"""
-        player0 = pygame.transform.scale_by(__unscaled__.player0_unscaled, 6)
 
-scr = pygame.display.set_mode((screen.size.w, screen.size.h), pygame.RESIZABLE)
+scr = pygame.display.set_mode((Screen.Size.w, Screen.Size.h))
 
-# Start Instance Classes--------------------------------------------------
+pygame.display.set_caption(Game.title)
 
-class Player:
-    def __init__(self, x, y, player, flags = []):
-        self.x = x
-        self.y = y
-        self.w = 48
-        self.h = 54
-        self.flags = flags
-        self.player = player
-    
-    def draw(self, surface):
-        if self.player == 0:
-            surface.blit(textures.player.player0, (self.x, self.y))
-    
-    def handle_input(self, key):
-        if key[pygame.K_w] or key[pygame.K_UP]:
-            self.y += -15
-        if key[pygame.K_d] or key[pygame.K_RIGHT]:
-            self.x += 15
-        if key[pygame.K_s] or key[pygame.K_DOWN]:
-            self.y += 15
-        if key[pygame.K_a] or key[pygame.K_LEFT]:
-            self.x += -15
-        
-        if key[pygame.K_w] and key[pygame.K_UP]:
-            self.y += -30
-        if key[pygame.K_d] and key[pygame.K_RIGHT]:
-            self.x += 30
-        if key[pygame.K_s] and key[pygame.K_DOWN]:
-            self.y += 30
-        if key[pygame.K_a] and key[pygame.K_LEFT]:
-            self.x += -30
+# ... (imports and Game class stay the same)
 
-# End Instance Classes----------------------------------------------------
+# FIX: Removed the ', 0' so it uses the default texture correctly
+player0 = player.Player(Screen.Size.w / 2 - 20, Screen.Size.h / 2 - 20)
+Game.players.append(player0)
 
-player0 = Player(461, 345, 0)
-
-while game.running:
-    keys = pygame.key.get_pressed()
-
+while Game.running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            game.running = False
-            pygame.quit()
-            quit()
+            Game.running = False
 
-    scr.fill((0,0,0))
+    if not Game.running:
+        break
 
-    player0.draw(scr)
+    keys = pygame.key.get_pressed()
+    scr.fill((0, 0, 0))
 
-    player0.handle_input(keys)
-
-    pygame.draw.rect(scr, (255,255,255), (player0.x, player0.y, player0.w, player0.h), 1)
+    # BETTER: Loop through your list.
+    # This makes adding more players/entities effortless later!
+    for p in Game.players:
+        p.handle_input(keys)
+        p.draw(scr)
 
     pygame.display.flip()
-    
     FPS.tick(30)
+
+pygame.quit()
