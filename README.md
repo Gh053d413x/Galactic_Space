@@ -14,3 +14,9 @@ Go to [Releases](https://github.com/Gh053d413x/Galactic_Space/releases/) to see 
 You can download the assets and the acuall game will be available soon.
 
 The game is in very early development, there will be more content coming
+
+---
+
+## Latest Patch for `dev_build.3`
+
+Made the code modular meaning it is more manageable than a monlith of a main.py (must execute main.py in order to use the other files as they act as modules)
