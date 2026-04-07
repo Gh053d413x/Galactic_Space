@@ -9,17 +9,15 @@ import pygame
 
 from config import *
 from assets import *
-
-import player
+import config
+import entity
+import bullet
 
 FPS = pygame.time.Clock()
 
+pygame.init()
 
-class Game:
-    title = "Galactic Space"
-    running = True
-    players = []
-
+monocraft = pygame.font.Font(f"{WIN_PATH}/fonts/Monocraft.ttf", 30)
 
 scr = pygame.display.set_mode((Screen.Size.w, Screen.Size.h))
 
@@ -28,10 +26,25 @@ pygame.display.set_caption(Game.title)
 # ... (imports and Game class stay the same)
 
 # FIX: Removed the ', 0' so it uses the default texture correctly
-player0 = player.Player(Screen.Size.w / 2 - 20, Screen.Size.h / 2 - 20)
+player0 = entity.Player(Screen.Size.w / 2 - 20, Screen.Size.h / 2 - 20)
 Game.players.append(player0)
 
+dart = bullet.Normal(player0.x+28, player0.y, player0)
+
+print(Game.players)
+
 while Game.running:
+    FPS.tick(60)
+
+    timer += 1
+
+    for i in range(len(entity.armada)):
+        timer = entity.armada[i].move(timer)
+
+    print(timer)
+
+    fps_display = monocraft.render(f"FPS: {FPS.get_fps()}", False, (255,255,255))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             Game.running = False
@@ -42,13 +55,19 @@ while Game.running:
     keys = pygame.key.get_pressed()
     scr.fill((0, 0, 0))
 
+    if config.debug:
+        scr.blit(fps_display, (10, 10))
+
     # BETTER: Loop through your list.
     # This makes adding more players/entities effortless later!
     for p in Game.players:
         p.handle_input(keys)
         p.draw(scr)
 
+    #draw all aliens in list:
+    for i in range (len(entity.armada)):
+        entity.armada[i].draw(scr)
+
     pygame.display.flip()
-    FPS.tick(30)
 
 pygame.quit()
