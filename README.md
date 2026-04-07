@@ -13,13 +13,4 @@ Go to [Releases](https://github.com/Gh053d413x/Galactic_Space/releases/) to see 
 ## Download
 You can download the assets and the acuall game will be available soon.
 
-Will be showed off at CSU Spur for the DSST: STEM Showcase
-
----
-
-## To Do List
-
-- 1.) Show off game at DSST: Stem Showcase + get suggestions
-- 2.) Fix up bugs
-- 3.) Implement Suggestions
-- 4.) Upload to Github and Publish it
+The game is in very early development, there will be more content coming within the next couple days
