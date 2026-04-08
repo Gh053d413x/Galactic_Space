@@ -1,4 +1,7 @@
 import pygame
+import subprocess
+
+from config import *
 
 class Normal:
     def __init__(self, x, y, player):
@@ -19,4 +22,5 @@ class Normal:
         pygame.draw.rect(surface, (250,250,250), (self.x, self.y, 3, 20))
 
 if __name__ == "__main__":
-    print("This is a module, please execute it via main.py")
+    print("Execution of module detected! Running Main.py")
+    subprocess.run(f"{WIN_PATH}/main.py", shell=True)

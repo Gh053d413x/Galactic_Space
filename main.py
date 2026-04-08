@@ -41,32 +41,42 @@ while Game.running:
     for i in range(len(entity.armada)):
         timer = entity.armada[i].move(timer)
 
-    print(timer)
-
     fps_display = monocraft.render(f"FPS: {FPS.get_fps()}", False, (255,255,255))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             Game.running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_F12:
+                if config.debug == False:
+                    config.debug = True
+                else:
+                    config.debug = False
+
 
     if not Game.running:
         break
 
     keys = pygame.key.get_pressed()
+
+    # RENDERING
     scr.fill((0, 0, 0))
 
     if config.debug:
         scr.blit(fps_display, (10, 10))
 
-    # BETTER: Loop through your list.
+    # BETTER: Loop through list.
     # This makes adding more players/entities effortless later!
     for p in Game.players:
         p.handle_input(keys)
         p.draw(scr)
 
-    #draw all aliens in list:
+    #draw all enemies in list:
     for i in range (len(entity.armada)):
         entity.armada[i].draw(scr)
+
+    a1 = entity.Enemy(400, 400, Textures.Enemy.enemy0)
+    a1.draw(scr)
 
     pygame.display.flip()
 

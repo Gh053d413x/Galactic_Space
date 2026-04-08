@@ -1,12 +1,13 @@
 import pygame
 
+import assets
 from config import *
 from assets import *
 import config
 
 
 class Player:
-    """Instance Class for player"""
+    """Instance Class for players"""
     def __init__(self, x, y, texture=Textures.Player.player0, key_map=None):
         self.x = x
         self.y = y
@@ -16,7 +17,8 @@ class Player:
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
 
     def draw(self, surface):
-        """Blits the player texture and draws a white hitbox rectangle"""
+        """Blits the player texture\n
+        Draws a white hitbox rectangle (if debug mode is on)"""
         # Draw the actual ship sprite
         surface.blit(self.image, self.rect)
         # Draw the white outline (useful for debugging hitboxes!)
@@ -46,21 +48,27 @@ class Player:
             self.rect.bottom = Screen.Size.h
 
 
-class Alien:
-    """Instance class for aliens"""
-    def __init__(self, x, y):
+class Enemy:
+    """Instance class for enemies"""
+    def __init__(self, x, y, image):
         self.x = x
         self.y = y
+        self.image = image
+
         self.isAlive = True
-        self.direction = 1
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
 
     def draw(self, surface):
-        pygame.draw.rect(surface, (250,250,250), (self.x, self.y, 40, 40))
+        """Blits the enemy texture\n
+        Draws a white hitbox rectangle (if debug mode is on)"""
+        surface.blit(self.image, self.rect)
+        # Draw the white outline (useful for debugging hitboxes!)
+        if config.debug:
+            pygame.draw.rect(surface, (255, 255, 255), self.rect, 1)
     
     def move(self, time):
         if time % 2 == 0:
             self.y += 5
-            self.direction *= -1
             return 0
         
         return time
@@ -68,7 +76,8 @@ class Alien:
 armada = [] #create empty list
 for i in range (4): #handles rows
     for j in range (14): #handles columns
-        armada.append(Alien(j*60+50, i*50+50)) #push Alien objects into list
+        armada.append(Enemy(j*60+50, i*50+50, assets.Textures.Enemy.enemy0)) #push Enemy objects into list
 
 if __name__ == "__main__":
-    print("This is a module, please execute it via main.py")
+    print("Execution of module detected! Running Main.py")
+    subprocess.run(f"{WIN_PATH}/main.py", shell=True)

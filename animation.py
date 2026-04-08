@@ -1,2 +1,8 @@
+from config import *
+
+import subprocess
+import pygame
+
 if __name__ == "__main__":
-    print("This is a module, please execute it via main.py")
+    print("Execution of module detected! Running Main.py")
+    subprocess.run(f"{WIN_PATH}/main.py", shell=True)
