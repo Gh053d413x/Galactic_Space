@@ -1,3 +1,5 @@
+"Module for Assets"
+
 import pygame
 
 from config import *

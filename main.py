@@ -26,10 +26,12 @@ pygame.display.set_caption(Game.title)
 # ... (imports and Game class stay the same)
 
 # FIX: Removed the ', 0' so it uses the default texture correctly
-player0 = entity.Player(Screen.Size.w / 2 - 20, Screen.Size.h / 2 - 20)
-Game.players.append(player0)
+player = entity.Player(Screen.Size.w / 2 - 20, Screen.Size.h / 2 - 20)
+Game.players.append(player)
 
-dart = bullet.Normal(player0.x+28, player0.y, player0)
+bullet_normal = bullet.Normal(player.x+28, player.y, player)
+
+
 
 print(Game.players)
 
@@ -38,8 +40,8 @@ while Game.running:
 
     timer += 1
 
-    for i in range(len(entity.armada)):
-        timer = entity.armada[i].move(timer)
+    # for i in range(len(entity.armada)):
+    #     timer = entity.armada[i].move(timer)
 
     fps_display = monocraft.render(f"FPS: {FPS.get_fps()}", False, (255,255,255))
 
@@ -74,8 +76,9 @@ while Game.running:
     #draw all enemies in list:
     for i in range (len(entity.armada)):
         entity.armada[i].draw(scr)
+        entity.armada[i].update()
 
-    a1 = entity.Enemy(400, 400, Textures.Enemy.enemy0)
+    a1 = entity.Enemy(400, 400, Textures.Enemy.enemy0, 0)
     a1.draw(scr)
 
     pygame.display.flip()

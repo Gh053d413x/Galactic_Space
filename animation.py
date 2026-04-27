@@ -1,3 +1,5 @@
+"Module for Animations"
+
 from config import *
 
 import subprocess

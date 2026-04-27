@@ -1,3 +1,5 @@
+"Module for Bullet"
+
 import pygame
 import subprocess
 

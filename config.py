@@ -1,5 +1,6 @@
+"Config Module"
+
 import os
-import pygame
 import subprocess
 
 WIN_PATH = os.getcwd()
@@ -9,7 +10,7 @@ timer = 1
 
 difficulty = 0
 
-debug = False
+debug = True
 
 class Screen:
     class Size:
