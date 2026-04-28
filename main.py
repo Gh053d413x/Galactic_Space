@@ -2,7 +2,7 @@
 # Copyright (c) Ghosted Alex 2026
 # Made under the MIT license: https://opensource.org/license/mit
 
-VER = "dev_build.3"
+VER = "dev_build.4"
 
 import os
 import random
