@@ -31,16 +31,8 @@ The Game is in VERY early development, please do not expect all features from th
 
 ---
 
-## Latest Patch for `dev_build.4`
+## Latest Patch for `dev_build.4.1`
 
-### MASSIVE UPDATE
+### Minor Update
 
-- Added Health Bar
-- Added Energy Bar
-- Added Bullets
-
-**Enemies can now damage you and you can damage them**
-
-**Enemies now spawn on random spots above the screen just like in the MakeCode version**
-
-**Health Bar/Energy Bar have a panel and ship can no longer go to the bottom of screen due to panel (Classic Arcade Experience)**
+- Modified Bullets to Use Sprites instead of Pygame.rects
