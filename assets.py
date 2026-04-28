@@ -35,5 +35,5 @@ class Textures:
 # -------------------------------------
 
 if __name__ == "__main__":
-    print("Execution of module detected! Running Main.py")
-    subprocess.run(f"{WIN_PATH}/main.py", shell=True)
+    print("Execution of module detected! Please run main.py for the game to work properly.")
+    
