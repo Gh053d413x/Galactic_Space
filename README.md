@@ -11,9 +11,15 @@ Go to [Releases](https://github.com/Gh053d413x/Galactic_Space/releases/) to see 
 ---
 
 ## Download
-You can download the assets and the acuall game will be available soon.
+You can download the assets and the game
 
-The game is in very early development, there will be more content coming
+**Requires Python 3.13+ to run!**
+
+---
+
+## WARNING
+
+The Game is in VERY early development, please do not expect all features from the MakeCode version in here just yet!
 
 ---
 
