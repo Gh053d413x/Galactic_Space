@@ -98,13 +98,13 @@ class Enemy:
         self.rect.topleft = (self.x, self.y)
 
     def draw(self, surface):
-        # Flip the sprite for enemies (facing down)
+    # Flip the sprite for enemies (facing down)
         img = pygame.transform.flip(self.image, False, True)
-        surface.blit(img, (self.x, self.y))
+        # Use self.rect instead of (self.x, self.y)
+        surface.blit(img, self.rect) 
         
         if config.debug:
             pygame.draw.rect(surface, (255, 51, 51), self.rect, 1)
-
 
 # armada = [] #create empty list
 # for i in range (4): #handles rows
