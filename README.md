@@ -17,6 +17,16 @@ The game is in very early development, there will be more content coming
 
 ---
 
-## Latest Patch for `dev_build.3`
+## Latest Patch for `dev_build.4`
 
-Made the code modular meaning it is more manageable than a monlith of a main.py (must execute main.py in order to use the other files as they act as modules)
+### MASSIVE UPDATE
+
+- Added Health Bar
+- Added Energy Bar
+- Added Bullets
+
+**Enemies can now damage you and you can damage them**
+
+**Enemies now spawn on random spots above the screen just like in the MakeCode version**
+
+**Health Bar/Energy Bar have a panel and ship can no longer go to the bottom of screen due to panel (Classic Arcade Experience)**
