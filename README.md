@@ -10,6 +10,14 @@ Go to [Releases](https://github.com/Gh053d413x/Galactic_Space/releases/) to see 
 
 ---
 
+## Licenses
+
+**Code:** [MIT](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_MIT)
+
+**Art:** [Creative Commons Zero v1.0 Universal](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_CCO)
+
+---
+
 ## Download
 You can download the assets and the game
 
