@@ -11,7 +11,7 @@ delay = 60
 
 difficulty = 0
 
-debug = True
+debug = False
 
 BACKGROUND_HEALTH_COLOR = (15, 15, 15)
 BACKGROUND_ENERGY_COLOR = (15, 15, 15)

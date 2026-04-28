@@ -56,6 +56,13 @@ while config.Game.running:
         
         # Check for the initial key press here
         if event.type == pygame.KEYDOWN:
+            if config.debug:
+                if event.key == pygame.K_KP_PLUS:
+                    if player.energy < 100:
+                        player.energy += 10
+                if event.key == pygame.K_KP_MINUS:
+                    if player.health < 100:
+                        player.health += 10
             if event.key == pygame.K_SPACE or event.key == pygame.K_z:
                 # Create the bullet at the player's current position
                 if player.energy > 0:
@@ -145,12 +152,14 @@ while config.Game.running:
         pygame.draw.rect(scr, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
     if player.health <= 25:
         pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
-    if player.health <= 0 or player.health > 100:
+    if player.health <= 0:
         print("Game Over!")
         config.Game.running = False
     
     if player.health_drain > player.health:
         player.health_drain -= .1
+    elif player.health_drain < player.health:
+        player.health_drain = player.health
 
     # 1. Background Bar (The gray slot)
     # Starts at 507, width 400 (507 + 400 = 907)
@@ -167,6 +176,11 @@ while config.Game.running:
     # 3. Draw the Energy Bar (Yellow)
     if player.energy > 0:
         pygame.draw.rect(scr, config.ENERGY_COLOR, (reverse_x, 656, energy_width, 25))
+
+    if player.health > 100:
+        player.health = 100
+    if player.energy > 100:
+        player.energy = 100
 
     pygame.display.flip()
 
