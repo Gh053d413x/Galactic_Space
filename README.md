@@ -1,4 +1,4 @@
-# Galactic Space
+# Galactic Space Reborn
 
 `Prerelease`
 
