@@ -37,6 +37,7 @@ print(config.Game.players)
 
 enemies = []
 bullets = []
+powerup = []
 
 while config.Game.running:
     FPS.tick(60)
@@ -47,6 +48,9 @@ while config.Game.running:
     # Change this part at the top
     if config.blink_timer < 60:
         config.blink_timer += 1
+    
+    if config.health_blink_timer < 60:
+        config.health_blink_timer += 1
 
     fps_display = monocraft.render(f"FPS: {FPS.get_fps()}", False, (255,255,255))
 
@@ -88,6 +92,27 @@ while config.Game.running:
     else:
         config.BACKGROUND_ENERGY_COLOR = (15, 15, 15) # Default Dark
     
+    if config.health_blink_timer < 60:
+        # This checks if the timer is in the first or second half of a 30-frame cycle
+        if (config.health_blink_timer // 15) % 2 == 0:
+            config.HEALTH_COLOR_HIGH = (255, 255, 255) # White
+            config.HEALTH_COLOR_LOW = (255, 255, 255) # White
+            config.HEALTH_COLOR_MED = (255, 255, 255) # White
+            config.HEALTH_COLOR_DRAIN = (127, 127, 127) # Gray
+            config.BACKGROUND_HEALTH_COLOR = (166, 51, 51) # Red
+        else:
+            config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
+            config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
+            config.HEALTH_COLOR_MED = (166, 164, 51) # Medium Health Color (Yellow)
+            config.HEALTH_COLOR_LOW = (166, 51, 51) # Low Health Color (Red)
+            config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
+    else:
+        config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
+        config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
+        config.HEALTH_COLOR_MED = (166, 164, 51) # Medium Health Color (Yellow)
+        config.HEALTH_COLOR_LOW = (166, 51, 51) # Low Health Color (Red)
+        config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
+    
     keys = pygame.key.get_pressed()
 
     # RENDERING
@@ -112,6 +137,23 @@ while config.Game.running:
         # Create a new enemy and ADD it to the list instead of overwriting
         new_enemy = entity.Enemy(random.randint(48, 874), -75, assets.Textures.Enemy.enemy0, 0)
         enemies.append(new_enemy)
+    
+    if config.delay == 30: # Trigger exactly halfway through the enemy spawn cycle
+        chance = random.randint(0, 99)
+        print(f"Roll: {chance}")
+
+        # Check for Health
+        if player.health <= 95 and 0 <= chance <= 15:
+            print("Health Powerup Summoned!")
+            new_powerup = entity.PowerUp(random.randint(48, 874), -75, 0)
+            powerup.append(new_powerup)
+            
+        # Check for Energy (Independent or Else-If)
+        elif player.energy <= 95 and 16 <= chance <= 50:
+            print("Energy Powerup Summoned!")
+            new_powerup = entity.PowerUp(random.randint(48, 874), -75, 2)
+            powerup.append(new_powerup)
+                
 
     # --- ONE LOOP TO RULE THEM ALL ---
     for e in enemies[:]:
@@ -131,15 +173,44 @@ while config.Game.running:
 
         # Check Player Collision
         if e.rect.colliderect(player.rect):
+            config.health_blink_timer = 0
+
             if config.difficulty == 0:
                 player.health -= 10
             else:
                 player.health -= 15
+
             if e in enemies: enemies.remove(e)
 
         e.draw(scr) # Draw it here
+    
+    
+    for p in powerup[:]:
+        p.move()    
+        p.update()
 
-    pygame.draw.rect(scr, config.PANEL_COLOR, (0, config.Screen.Size.h-45, config.Screen.Size.w, config.Screen.Size.h))
+        if p.y > config.Screen.Size.h:
+            powerup.remove(p)
+            continue
+
+        # Check Player Collision
+        if p.rect.colliderect(player.rect):
+            if p.type == 0:
+                config.health_blink_timer = 0
+                if config.difficulty == 0:
+                    player.health += 10
+                else:
+                    player.health += 15
+            if p.type == 2:
+                if config.difficulty == 0:
+                    player.energy += 10
+                else:
+                    player.energy += 15
+            if p in powerup: powerup.remove(p)
+
+        p.draw(scr) # Draw it here
+
+    scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
 
     # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
     pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))

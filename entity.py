@@ -106,6 +106,39 @@ class Enemy:
         if config.debug:
             pygame.draw.rect(surface, (255, 51, 51), self.rect, 1)
 
+class PowerUp:
+    def __init__(self, x: int, y: int, powerUpType: int):
+        self.x = x
+        self.y = y
+        self.type = powerUpType
+
+        if self.type == 0:
+            self.image = assets.Textures.PowerUp.heart
+        elif self.type == 2:
+            self.image = assets.Textures.PowerUp.energy
+
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
+        self.speed = 3
+
+    def move(self):
+        """Updates position based on type"""
+        if self.type == 0: # Standard Heart
+            self.y += self.speed
+        if self.type == 2:
+            self.y += self.speed-1
+
+    def update(self):
+        # Call move and then update the rect
+        self.rect.topleft = (self.x, self.y)
+
+    def draw(self, surface):
+        # Use self.rect instead of (self.x, self.y)
+        surface.blit(self.image, self.rect) 
+        
+        if config.debug:
+            pygame.draw.rect(surface, (255, 51, 51), self.rect, 1)
+
+
 # armada = [] #create empty list
 # for i in range (4): #handles rows
 #     for j in range (14): #handles columns
