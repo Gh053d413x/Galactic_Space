@@ -2,12 +2,11 @@
 # Copyright (c) Ghosted Alex 2026
 # Made under the MIT license: https://opensource.org/license/mit
 
-VER = "dev_build.4"
+VER: str = "dev_build.5.1"
 
 import os
 import random
 import pygame
-
 import assets
 import config
 import entity
