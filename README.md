@@ -31,8 +31,13 @@ The Game is in VERY early development, please do not expect all features from th
 
 ---
 
-## Latest Patch for `dev_build.4.1`
+## Latest Patch for `dev_build.5`
 
-### Minor Update
+### Another Massive Update hit the Galactic Space Reborn Project, Welcome to dev_build.5!
 
-- Modified Bullets to Use Sprites instead of Pygame.rects
+- Added Heal & Energy Power Ups
+- Added More Textures into assets.py
+- Added Power Ups into entity.py (Thinking of moving that to a powerup.py file)
+- Added New Panel Texture
+- Added Flashes to Health & Energy Bars in Specific Situations
+- Removed pygame.rect Object for Panel in favor of a Panel Texture!
