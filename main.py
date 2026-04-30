@@ -2,7 +2,7 @@
 # Copyright (c) Ghosted Alex 2026
 # Made under the MIT license: https://opensource.org/license/mit
 
-VER: str = "dev_build.5.1"
+VER: str = "dev_build.6"
 
 import os
 import random
@@ -38,6 +38,11 @@ enemies = []
 bullets = []
 powerup = []
 
+def game_over():
+    print("Game Over!")
+    assets.Sounds.player_death.play()
+    config.game_over = True
+
 while config.Game.running:
     FPS.tick(60)
 
@@ -50,8 +55,6 @@ while config.Game.running:
     
     if config.health_blink_timer < 60:
         config.health_blink_timer += 1
-
-    fps_display = monocraft.render(f"FPS: {FPS.get_fps()}", False, (255,255,255))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -97,7 +100,7 @@ while config.Game.running:
             config.HEALTH_COLOR_HIGH = (255, 255, 255) # White
             config.HEALTH_COLOR_LOW = (255, 255, 255) # White
             config.HEALTH_COLOR_MED = (255, 255, 255) # White
-            config.HEALTH_COLOR_DRAIN = (127, 127, 127) # Gray
+            config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
             config.BACKGROUND_HEALTH_COLOR = (166, 51, 51) # Red
         else:
             config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
@@ -174,6 +177,8 @@ while config.Game.running:
         if e.rect.colliderect(player.rect):
             config.health_blink_timer = 0
 
+            assets.Sounds.player_damage.play()
+
             if config.difficulty == 0:
                 player.health -= 10
             else:
@@ -223,8 +228,7 @@ while config.Game.running:
     if player.health <= 25:
         pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
     if player.health <= 0:
-        print("Game Over!")
-        config.Game.running = False
+        game_over()
     
     if player.health_drain > player.health:
         player.health_drain -= .1

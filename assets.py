@@ -4,6 +4,8 @@ import pygame
 
 import config
 
+pygame.mixer.init()
+
 # -------------------------------------
 
 class RawTextures:
@@ -22,6 +24,7 @@ class RawTextures:
     energy_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/powerUp/powerUp2.png")
 
     # UI
+    game_over_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/ui/txt/game_over.png")
 
 
 class Textures:
@@ -51,6 +54,14 @@ class Textures:
     class UI:
         """UI Class for Textures"""
         panel_01 = pygame.image.load(f"{config.WIN_PATH}/textures/ui/panel/panel_01.png")
+        game_over = pygame.transform.scale_by(RawTextures.game_over_unscaled, config.SPRITE_SCALING)
+
+
+class Sounds:
+    """Base Class for Sounds"""
+    
+    player_damage = pygame.mixer.Sound(f"{config.WIN_PATH}/sounds/player_damage.wav")
+    player_death = pygame.mixer.Sound(f"{config.WIN_PATH}/sounds/player_death.wav")
 
 # -------------------------------------
 

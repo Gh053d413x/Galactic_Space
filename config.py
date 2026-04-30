@@ -3,6 +3,7 @@
 import os
 import subprocess
 import math
+import pygame
 
 WIN_PATH = os.getcwd()
 SPRITE_SCALING = 6
@@ -25,6 +26,8 @@ ENERGY_COLOR = (219, 212, 53)
 
 blink_timer = 60
 health_blink_timer = 60
+
+game_over = False
 
 class Screen:
     "Base Class for Screen"
