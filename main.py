@@ -43,218 +43,281 @@ def game_over():
     assets.Sounds.player_death.play()
     config.game_over = True
 
+def draw_game_over_ui(surface):
+    # 1. Create a temporary surface with the same size as the screen
+    # pygame.SRCALPHA makes it capable of transparency
+    overlay = pygame.Surface((config.Screen.Size.w, config.Screen.Size.h), pygame.SRCALPHA)
+    
+    # 2. Fill it with a semi-transparent color (R, G, B, Alpha)
+    # Alpha 128 is 50% transparent (0 is invisible, 255 is solid)
+    overlay.fill((0, 0, 0, 150)) 
+    
+    # 3. Blit the overlay onto the main screen
+    surface.blit(overlay, (0, 0))
+
+    # 4. Draw your text on top
+
+    surface.blit(assets.Textures.UI.game_over, (config.Screen.Size.w/2 - assets.Textures.UI.game_over.width/2, config.Screen.Size.h/2 - assets.Textures.UI.game_over.height/2))
+
 while config.Game.running:
     FPS.tick(60)
 
-    # for i in range(len(entity.armada)):
-    #     timer = entity.armada[i].move(timer)
-
-    # Change this part at the top
-    if config.blink_timer < 60:
-        config.blink_timer += 1
-    
-    if config.health_blink_timer < 60:
-        config.health_blink_timer += 1
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            config.Game.running = False
+    if config.game_over == False:
+        if config.blink_timer < 60:
+            config.blink_timer += 1
         
-        # Check for the initial key press here
-        if event.type == pygame.KEYDOWN:
-            if config.debug:
-                if event.key == pygame.K_KP_PLUS:
-                    if player.energy < 100:
-                        player.energy += 10
-                if event.key == pygame.K_KP_MINUS:
-                    if player.health < 100:
-                        player.health += 10
-            if event.key == pygame.K_SPACE or event.key == pygame.K_z:
-                # Create the bullet at the player's current position
-                if player.energy > 0:
-                    new_bullet = bullet.Normal(player.rect.centerx, player.rect.top)
-                    bullets.append(new_bullet)
-                    player.energy -= 5
-                else:
-                    config.blink_timer = 0
-                        
-            if event.key == pygame.K_F12:
-                config.debug = not config.debug
+        if config.health_blink_timer < 60:
+            config.health_blink_timer += 1
 
-    if not config.Game.running:
-        break
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                config.Game.running = False
+            
+            # Check for the initial key press here
+            if event.type == pygame.KEYDOWN:
+                if config.debug:
+                    if event.key == pygame.K_KP_PLUS:
+                        if player.energy < 100:
+                            player.energy += 10
+                    if event.key == pygame.K_KP_MINUS:
+                        if player.health < 100:
+                            player.health += 10
+                if event.key == pygame.K_SPACE or event.key == pygame.K_z:
+                    # Create the bullet at the player's current position
+                    if player.energy > 0:
+                        new_bullet = bullet.Normal(player.rect.centerx, player.rect.top)
+                        bullets.append(new_bullet)
+                        player.energy -= 5
+                    else:
+                        config.blink_timer = 0
+                            
+                if event.key == pygame.K_F12:
+                    config.debug = not config.debug
 
-    # Replace that whole 'for i in range(2)' block with this:
-    if config.blink_timer < 60:
-        # This checks if the timer is in the first or second half of a 30-frame cycle
-        if (config.blink_timer // 15) % 2 == 0:
-            config.BACKGROUND_ENERGY_COLOR = (166, 51, 51) # Red
+        if not config.Game.running:
+            break
+
+        # Replace that whole 'for i in range(2)' block with this:
+        if config.blink_timer < 60:
+            # This checks if the timer is in the first or second half of a 30-frame cycle
+            if (config.blink_timer // 15) % 2 == 0:
+                config.BACKGROUND_ENERGY_COLOR = (166, 51, 51) # Red
+            else:
+                config.BACKGROUND_ENERGY_COLOR = (15, 15, 15)  # Dark
         else:
-            config.BACKGROUND_ENERGY_COLOR = (15, 15, 15)  # Dark
-    else:
-        config.BACKGROUND_ENERGY_COLOR = (15, 15, 15) # Default Dark
-    
-    if config.health_blink_timer < 60:
-        # This checks if the timer is in the first or second half of a 30-frame cycle
-        if (config.health_blink_timer // 15) % 2 == 0:
-            config.HEALTH_COLOR_HIGH = (255, 255, 255) # White
-            config.HEALTH_COLOR_LOW = (255, 255, 255) # White
-            config.HEALTH_COLOR_MED = (255, 255, 255) # White
-            config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
-            config.BACKGROUND_HEALTH_COLOR = (166, 51, 51) # Red
+            config.BACKGROUND_ENERGY_COLOR = (15, 15, 15) # Default Dark
+        
+        if config.health_blink_timer < 60:
+            # This checks if the timer is in the first or second half of a 30-frame cycle
+            if (config.health_blink_timer // 15) % 2 == 0:
+                config.HEALTH_COLOR_HIGH = (255, 255, 255) # White
+                config.HEALTH_COLOR_LOW = (255, 255, 255) # White
+                config.HEALTH_COLOR_MED = (255, 255, 255) # White
+                config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
+                config.BACKGROUND_HEALTH_COLOR = (166, 51, 51) # Red
+            else:
+                config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
+                config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
+                config.HEALTH_COLOR_MED = (166, 164, 51) # Medium Health Color (Yellow)
+                config.HEALTH_COLOR_LOW = (166, 51, 51) # Low Health Color (Red)
+                config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
         else:
             config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
             config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
             config.HEALTH_COLOR_MED = (166, 164, 51) # Medium Health Color (Yellow)
             config.HEALTH_COLOR_LOW = (166, 51, 51) # Low Health Color (Red)
             config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
-    else:
-        config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
-        config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
-        config.HEALTH_COLOR_MED = (166, 164, 51) # Medium Health Color (Yellow)
-        config.HEALTH_COLOR_LOW = (166, 51, 51) # Low Health Color (Red)
-        config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
-    
-    keys = pygame.key.get_pressed()
-
-    # RENDERING
-    # Inside your "RENDERING" section in main.py
-    scr.fill((0, 0, 0))
-
-    # Update and Draw Bullets
-    for b in bullets[:]: # [:] creates a copy so we can safely remove items
-        b.update()
-        b.draw(scr)
         
-        # Optimization: Delete bullet if it leaves the screen
-        if b.rect.bottom < 0:
-            bullets.remove(b)
+        keys = pygame.key.get_pressed()
 
-    player.handle_input(keys)
-    player.draw(scr)
+        # RENDERING
+        # Inside your "RENDERING" section in main.py
+        scr.fill((0, 0, 0))
 
-    config.delay -= 1
-    if config.delay <= 0:
-        config.delay = 60
-        # Create a new enemy and ADD it to the list instead of overwriting
-        new_enemy = entity.Enemy(random.randint(48, 874), -75, assets.Textures.Enemy.enemy0, 0)
-        enemies.append(new_enemy)
-    
-    if config.delay == 30: # Trigger exactly halfway through the enemy spawn cycle
-        chance = random.randint(0, 99)
-        print(f"Roll: {chance}")
-
-        # Check for Health
-        if player.health <= 95 and 0 <= chance <= 15:
-            print("Health Powerup Summoned!")
-            new_powerup = entity.PowerUp(random.randint(48, 874), -75, 0)
-            powerup.append(new_powerup)
+        # Update and Draw Bullets
+        for b in bullets[:]: # [:] creates a copy so we can safely remove items
+            b.update()
+            b.draw(scr)
             
-        # Check for Energy (Independent or Else-If)
-        elif player.energy <= 95 and 16 <= chance <= 50:
-            print("Energy Powerup Summoned!")
-            new_powerup = entity.PowerUp(random.randint(48, 874), -75, 2)
-            powerup.append(new_powerup)
+            # Optimization: Delete bullet if it leaves the screen
+            if b.rect.bottom < 0:
+                bullets.remove(b)
+
+        player.handle_input(keys)
+        player.draw(scr)
+
+        config.delay -= 1
+        if config.delay <= 0:
+            config.delay = 60
+            # Create a new enemy and ADD it to the list instead of overwriting
+            new_enemy = entity.Enemy(random.randint(48, 874), -75, assets.Textures.Enemy.enemy0, 0)
+            enemies.append(new_enemy)
+        
+        if config.delay == 30: # Trigger exactly halfway through the enemy spawn cycle
+            chance = random.randint(0, 99)
+            print(f"Roll: {chance}")
+
+            # Check for Health
+            if player.health <= 95 and 0 <= chance <= 15:
+                print("Health Powerup Summoned!")
+                new_powerup = entity.PowerUp(random.randint(48, 874), -75, 0)
+                powerup.append(new_powerup)
                 
+            # Check for Energy (Independent or Else-If)
+            elif player.energy <= 95 and 16 <= chance <= 50:
+                print("Energy Powerup Summoned!")
+                new_powerup = entity.PowerUp(random.randint(48, 874), -75, 2)
+                powerup.append(new_powerup)
+                    
 
-    # --- ONE LOOP TO RULE THEM ALL ---
-    for e in enemies[:]:
-        e.move()    
-        e.update()
+        # --- ONE LOOP TO RULE THEM ALL ---
+        for e in enemies[:]:
+            e.move()    
+            e.update()
 
-        if e.y > config.Screen.Size.h:
-            enemies.remove(e)
-            continue
+            if e.y > config.Screen.Size.h:
+                enemies.remove(e)
+                continue
 
-        # Check Bullet Collision
-        for b in bullets[:]:
-            if e.rect.colliderect(b.rect):
-                if e in enemies: enemies.remove(e)
-                if b in bullets: bullets.remove(b)
-                break # Enemy is dead, stop checking bullets for it
+            # Check Bullet Collision
+            for b in bullets[:]:
+                if e.rect.colliderect(b.rect):
+                    if e in enemies: enemies.remove(e)
+                    if b in bullets: bullets.remove(b)
+                    break # Enemy is dead, stop checking bullets for it
 
-        # Check Player Collision
-        if e.rect.colliderect(player.rect):
-            config.health_blink_timer = 0
-
-            assets.Sounds.player_damage.play()
-
-            if config.difficulty == 0:
-                player.health -= 10
-            else:
-                player.health -= 15
-
-            if e in enemies: enemies.remove(e)
-
-        e.draw(scr) # Draw it here
-    
-    
-    for p in powerup[:]:
-        p.move()    
-        p.update()
-
-        if p.y > config.Screen.Size.h:
-            powerup.remove(p)
-            continue
-
-        # Check Player Collision
-        if p.rect.colliderect(player.rect):
-            if p.type == 0:
+            # Check Player Collision
+            if e.rect.colliderect(player.rect):
                 config.health_blink_timer = 0
+
+                assets.Sounds.player_damage.play()
+
                 if config.difficulty == 0:
-                    player.health += 10
+                    player.health -= 10
                 else:
-                    player.health += 15
-            if p.type == 2:
-                if config.difficulty == 0:
-                    player.energy += 10
-                else:
-                    player.energy += 15
-            if p in powerup: powerup.remove(p)
+                    player.health -= 15
 
-        p.draw(scr) # Draw it here
+                if e in enemies: enemies.remove(e)
 
-    scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
+            e.draw(scr) # Draw it here
+        
+        
+        for p in powerup[:]:
+            p.move()    
+            p.update()
 
-    # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
-    pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
+            if p.y > config.Screen.Size.h:
+                powerup.remove(p)
+                continue
 
-    pygame.draw.rect(scr, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
+            # Check Player Collision
+            if p.rect.colliderect(player.rect):
+                if p.type == 0:
+                    config.health_blink_timer = 0
+                    if config.difficulty == 0:
+                        player.health += 10
+                    else:
+                        player.health += 15
+                if p.type == 2:
+                    if config.difficulty == 0:
+                        player.energy += 10
+                    else:
+                        player.energy += 15
+                if p in powerup: powerup.remove(p)
 
-    if player.health > 50:
-        pygame.draw.rect(scr, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
-    if 50 >= player.health > 25:
-        pygame.draw.rect(scr, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
-    if player.health <= 25:
-        pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
-    if player.health <= 0:
-        game_over()
-    
-    if player.health_drain > player.health:
-        player.health_drain -= .1
-    elif player.health_drain < player.health:
-        player.health_drain = player.health
+            p.draw(scr) # Draw it here
 
-    # 1. Background Bar (The gray slot)
-    # Starts at 507, width 400 (507 + 400 = 907)
-    pygame.draw.rect(scr, config.BACKGROUND_ENERGY_COLOR, (507, 656, 400, 25))
+        scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
 
-    # 2. The Draining Logic
-    # We calculate the width first
-    energy_width = player.energy * 4
+        # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
+        pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
 
-    # To make it "reverse," we push the X-coordinate forward by the missing amount
-    # 507 + (400 - energy_width)
-    reverse_x = 507 + (400 - energy_width)
+        pygame.draw.rect(scr, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
 
-    # 3. Draw the Energy Bar (Yellow)
-    if player.energy > 0:
-        pygame.draw.rect(scr, config.ENERGY_COLOR, (reverse_x, 656, energy_width, 25))
+        if player.health > 50:
+            pygame.draw.rect(scr, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
+        if 50 >= player.health > 25:
+            pygame.draw.rect(scr, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
+        if player.health <= 25:
+            pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
+        if player.health <= 0:
+            game_over()
+        
+        if player.health_drain > player.health:
+            player.health_drain -= .1
+        elif player.health_drain < player.health:
+            player.health_drain = player.health
 
-    if player.health > 100:
-        player.health = 100
-    if player.energy > 100:
-        player.energy = 100
+        # 1. Background Bar (The gray slot)
+        # Starts at 507, width 400 (507 + 400 = 907)
+        pygame.draw.rect(scr, config.BACKGROUND_ENERGY_COLOR, (507, 656, 400, 25))
+
+        # 2. The Draining Logic
+        # We calculate the width first
+        energy_width = player.energy * 4
+
+        # To make it "reverse," we push the X-coordinate forward by the missing amount
+        # 507 + (400 - energy_width)
+        reverse_x = 507 + (400 - energy_width)
+
+        # 3. Draw the Energy Bar (Yellow)
+        if player.energy > 0:
+            pygame.draw.rect(scr, config.ENERGY_COLOR, (reverse_x, 656, energy_width, 25))
+
+        if player.health > 100:
+            player.health = 100
+        if player.energy > 100:
+            player.energy = 100
+    else:
+        # This runs when the game is over
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                config.Game.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r: # Example: Restart game
+                    # Reset your variables here
+                    config.game_over = False
+                    player.health = 100
+                    enemies.clear()
+        scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
+
+        # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
+        pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
+
+        pygame.draw.rect(scr, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
+
+        if player.health > 50:
+            pygame.draw.rect(scr, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
+        if 50 >= player.health > 25:
+            pygame.draw.rect(scr, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
+        if player.health <= 25:
+            pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
+        if player.health <= 0:
+            game_over()
+            
+        if player.health_drain > player.health:
+            player.health_drain -= .1
+        elif player.health_drain < player.health:
+            player.health_drain = player.health
+
+        # 1. Background Bar (The gray slot)
+        # Starts at 507, width 400 (507 + 400 = 907)
+        pygame.draw.rect(scr, config.BACKGROUND_ENERGY_COLOR, (507, 656, 400, 25))
+
+        # 2. The Draining Logic
+        # We calculate the width first
+        energy_width = player.energy * 4
+
+        # To make it "reverse," we push the X-coordinate forward by the missing amount
+        # 507 + (400 - energy_width)
+        reverse_x = 507 + (400 - energy_width)
+
+        # 3. Draw the Energy Bar (Yellow)
+        if player.energy > 0:
+            pygame.draw.rect(scr, config.ENERGY_COLOR, (reverse_x, 656, energy_width, 25))
+
+        # Draw the transparent GUI
+        draw_game_over_ui(scr)
 
     pygame.display.flip()
 
