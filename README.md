@@ -31,10 +31,11 @@ The Game is in VERY early development, please do not expect all features from th
 
 ---
 
-## Latest Patch for `dev_build.5.1`
+## Latest Patch for `dev_build.6`
 
-### Minor Update
+### Sounds Good!
 
-- Added Title
-- Changed PreRoll
-- Added Game Over Sprite
+- Added Sounds
+- Modified Game Over to use a game_over() function
+- Removed Unnecessary parts in the code
+- Added player_damage.wav and player_death.wav for initial sounds and proof of concept
