@@ -33,9 +33,11 @@ The Game is in VERY early development, please do not expect all features from th
 
 ## Latest Patch for `dev_build.6`
 
-### Sounds Good!
+### Visual Update
 
-- Added Sounds
-- Modified Game Over to use a game_over() function
-- Removed Unnecessary parts in the code
-- Added player_damage.wav and player_death.wav for initial sounds and proof of concept
+Updated VIsuals of:
+
+- powerUp0
+- powerUp1
+- powerUp2
+- powerUp3
