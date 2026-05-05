@@ -31,13 +31,8 @@ The Game is in VERY early development, please do not expect all features from th
 
 ---
 
-## Latest Patch for `dev_build.6`
+## Latest Patch for `dev_build.7`
 
-### Visual Update
+### Engine Update
 
-Updated VIsuals of:
-
-- powerUp0
-- powerUp1
-- powerUp2
-- powerUp3
+Overhauled the engine and added more sounds
