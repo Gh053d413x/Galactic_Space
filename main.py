@@ -2,7 +2,7 @@
 # Copyright (c) Ghosted Alex 2026
 # Made under the MIT license: https://opensource.org/license/mit
 
-VER: str = "dev_build.7"
+VER: str = "dev_build.7.1"
 
 import os
 import random
@@ -39,7 +39,7 @@ powerup = []
 
 def game_over():
     print("Game Over!")
-    assets.Sounds.entity_death.play()
+    assets.Sounds.player_death.play()
     config.game_over = True
 
 def draw_game_over_ui(surface):
@@ -58,8 +58,14 @@ def draw_game_over_ui(surface):
 
     surface.blit(assets.Textures.UI.game_over, (config.Screen.Size.w/2 - assets.Textures.UI.game_over.width/2, config.Screen.Size.h/2 - assets.Textures.UI.game_over.height/2))
 
+
 while config.Game.running:
     FPS.tick(60)
+
+    config.frame += 1
+
+    timer_str = monocraft.render(f"{config.powerup_type}: {config.powerup_timer}", True, (255,255,255))
+
     if config.error != 0:
         config.Game.running = False
 
@@ -120,16 +126,19 @@ while config.Game.running:
                 config.BACKGROUND_HEALTH_COLOR = (166, 51, 51) # Red
             else:
                 config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
-                config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
-                config.HEALTH_COLOR_MED = (166, 164, 51) # Medium Health Color (Yellow)
-                config.HEALTH_COLOR_LOW = (166, 51, 51) # Low Health Color (Red)
+                config.HEALTH_COLOR_HIGH = (255, 168, 82) # High Health Color (Green)
+                config.HEALTH_COLOR_MED = (255, 255, 0) # Medium Health Color (Yellow)
+                config.HEALTH_COLOR_LOW = (255, 0, 0) # Low Health Color (Red)
                 config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
         else:
-            config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
-            config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
-            config.HEALTH_COLOR_MED = (166, 164, 51) # Medium Health Color (Yellow)
-            config.HEALTH_COLOR_LOW = (166, 51, 51) # Low Health Color (Red)
-            config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
+            if player.invincible == True:
+                config.HEALTH_COLOR_HIGH = (184, 125, 0) # Invincible Health Color (Gold)
+            else:
+                config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
+                config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
+                config.HEALTH_COLOR_MED = (255, 255, 0) # Medium Health Color (Yellow)
+                config.HEALTH_COLOR_LOW = (166, 51, 51) # Low Health Color (Red)
+                config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
         
         keys = pygame.key.get_pressed()
 
@@ -150,28 +159,44 @@ while config.Game.running:
         player.draw(scr)
 
         config.delay -= 1
-        if config.delay <= 0:
+        if config.delay < 0:
             config.delay = 60
+        
+        if config.delay == 0:
             # Create a new enemy and ADD it to the list instead of overwriting
             new_enemy = entity.Enemy(random.randint(48, 874), -75, assets.Textures.Enemy.enemy0, 0)
             enemies.append(new_enemy)
         
-        if config.delay == 30: # Trigger exactly halfway through the enemy spawn cycle
+        if config.delay == random.randint(1, 60): # Trigger exactly halfway through the enemy spawn cycle
             chance = random.randint(0, 99)
             print(f"Roll: {chance}")
 
             # Check for Health
             if player.health <= 95 and 0 <= chance <= 15:
-                print("Health Powerup Summoned!")
+                print("Wrench Powerup Summoned!")
                 new_powerup = entity.PowerUp(random.randint(48, 874), -75, 0)
                 powerup.append(new_powerup)
                 
-            # Check for Energy (Independent or Else-If)
-            elif player.energy <= 95 and 16 <= chance <= 50:
-                print("Energy Powerup Summoned!")
+            # Check for Ammunition (Independent or Else-If)
+            if player.energy <= 95 and 16 <= chance <= 50:
+                print("Ammo Powerup Summoned!")
                 new_powerup = entity.PowerUp(random.randint(48, 874), -75, 2)
                 powerup.append(new_powerup)
+            
+            if config.powerup_active == False:
+                # Check for 10% Chance, regardless of health and ammo
+                if 50 <= chance <= 60:
+                    print("Power Wrench Powerup Summoned!")
+                    new_powerup = entity.PowerUp(random.randint(48, 874), -75, 1)
+                    powerup.append(new_powerup)
                     
+        if config.delay == 0:
+            if config.powerup_timer > 0:
+                config.powerup_timer -= 1
+        
+        if config.powerup_timer <= 0:
+            config.health_blink_timer = 0
+
 
         # --- ONE LOOP TO RULE THEM ALL ---
         for e in enemies[:]:
@@ -194,14 +219,18 @@ while config.Game.running:
             if e.rect.colliderect(player.rect):
                 config.health_blink_timer = 0
 
-                assets.Sounds.player_damage.play()
+                assets.Sounds.entity_damage.play()
 
-                if config.difficulty == 0:
-                    player.health -= 10
-                else:
-                    player.health -= 15
+                if player.invincible == False:
+                    if config.difficulty == 0:
+                        player.health -= 10
+                    else:
+                        player.health -= 15
 
                 if e in enemies: enemies.remove(e)
+
+                if player.invincible == True:
+                    config.score += 1
 
             e.draw(scr) # Draw it here
         
@@ -218,15 +247,25 @@ while config.Game.running:
             if p.rect.colliderect(player.rect):
                 if p.type == 0:
                     config.health_blink_timer = 0
-                    if config.difficulty == 0:
-                        player.health += 10
-                    else:
-                        player.health += 15
+                    if player.health < 100:
+                        if config.difficulty == 0:
+                            player.health += 10
+                        else:
+                            player.health += 5
                 if p.type == 2:
-                    if config.difficulty == 0:
-                        player.energy += 10
-                    else:
-                        player.energy += 15
+                    if player.energy < 100:
+                        if config.difficulty == 0:
+                            player.energy += 10
+                        else:
+                            player.energy += 5
+                if p.type == 1:
+                    config.health_blink_timer = 0
+                    if player.health < 100:
+                        player.health = 100
+                    config.powerup_timer = 15
+                    player.invincible = True
+                    
+
                 if p in powerup: powerup.remove(p)
 
             p.draw(scr) # Draw it here
@@ -272,6 +311,10 @@ while config.Game.running:
             player.health = 100
         if player.energy > 100:
             player.energy = 100
+
+        if config.powerup_timer > 0:
+            scr.blit(timer_str, (20, 20))
+            print(config.powerup_timer)
     else:
         # This runs when the game is over
         for event in pygame.event.get():

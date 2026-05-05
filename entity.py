@@ -17,6 +17,8 @@ class Player:
         self.energy = 100
         
         self.image = texture
+
+        self.invincible = False
         # This creates a Rect exactly the size of your image
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
 
@@ -113,17 +115,21 @@ class PowerUp:
         self.type = powerUpType
 
         if self.type == 0:
-            self.image = assets.Textures.PowerUp.heart
+            self.image = assets.Textures.PowerUp.wrench
+        elif self.type == 1:
+            self.image = assets.Textures.PowerUp.power_wrench
         elif self.type == 2:
-            self.image = assets.Textures.PowerUp.energy
+            self.image = assets.Textures.PowerUp.ammo
 
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
         self.speed = 3
 
     def move(self):
         """Updates position based on type"""
-        if self.type == 0: # Standard Heart
+        if self.type == 0: # Standard Wrench
             self.y += self.speed
+        if self.type == 1:
+            self.y += self.speed+1
         if self.type == 2:
             self.y += self.speed-1
 

@@ -20,6 +20,16 @@ difficulty = 0
 
 debug = False
 
+score = 0
+
+powerup_timer = 0
+
+powerup_active = False
+
+powerup_type = ""
+
+frame = 0
+
 BACKGROUND_HEALTH_COLOR = (15, 15, 15)
 BACKGROUND_ENERGY_COLOR = (15, 15, 15)
 

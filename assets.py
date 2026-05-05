@@ -20,8 +20,9 @@ try:
         bullet_blank_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/bullet/bullet-1.png")
 
         # Powerup
-        heart_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/powerUp/powerUp0.png")
-        energy_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/powerUp/powerUp2.png")
+        wrench_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/powerUp/powerUp0.png")
+        power_wrench_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/powerUp/powerUp1.png")
+        ammo_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/powerUp/powerUp2.png")
 
         # UI
         game_over_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/ui/txt/game_over.png")
@@ -47,9 +48,10 @@ try:
 
         class PowerUp:
             """PowerUp Class for Textures"""
-            heart = pygame.transform.scale_by(RawTextures.heart_unscaled, config.SPRITE_SCALING)
-            energy = pygame.transform.scale_by(RawTextures.energy_unscaled, config.SPRITE_SCALING)
-
+            wrench = pygame.transform.scale_by(RawTextures.wrench_unscaled, config.SPRITE_SCALING)
+            power_wrench = pygame.transform.scale_by(RawTextures.power_wrench_unscaled, config.SPRITE_SCALING)
+            ammo = pygame.transform.scale_by(RawTextures.ammo_unscaled, config.SPRITE_SCALING)
+            
 
         class UI:
             """UI Class for Textures"""
@@ -64,6 +66,11 @@ try:
         player_death = pygame.mixer.Sound(f"{config.WIN_PATH}/sounds/player_death.wav")
         player_shoot = pygame.mixer.Sound(f"{config.WIN_PATH}/sounds/player_shoot.wav")
 
+
+    class Music:
+        """Base Class for Music"""
+
+        invincibility = pygame.mixer.Sound(f"{config.WIN_PATH}/music/invincibility.wav")
 
 except Exception as e:
     config.error = 1010
