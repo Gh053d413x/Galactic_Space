@@ -2,7 +2,7 @@
 # Copyright (c) Ghosted Alex 2026
 # Made under the MIT license: https://opensource.org/license/mit
 
-VER: str = "dev_build.6"
+VER: str = "dev_build.7"
 
 import os
 import random
@@ -25,14 +25,13 @@ pygame.display.set_caption(config.Game.title)
 # ... (imports and Game class stay the same)
 
 # FIX: Removed the ', 0' so it uses the default texture correctly
-player = entity.Player(config.Screen.Size.w / 2 - 20, config.Screen.Size.h / 2 - 20)
-config.Game.players.append(player)
+player = entity.Player(config.Screen.Size.w / 2 - 20, config.Screen.Size.h / 2 - 20)# Instead of manual math:
+player_rect = player.image.get_rect(center=(config.Screen.Size.w / 2, config.Screen.Size.h / 2))
+player.x, player.y = player_rect.topleft
 
 bullet_normal = bullet.Normal(player.x+28, player.y)
 
 a1 = entity.Enemy(random.randint(16, 906), -5, assets.Textures.Enemy.enemy0, 0)
-
-print(config.Game.players)
 
 enemies = []
 bullets = []
@@ -40,7 +39,7 @@ powerup = []
 
 def game_over():
     print("Game Over!")
-    assets.Sounds.player_death.play()
+    assets.Sounds.entity_death.play()
     config.game_over = True
 
 def draw_game_over_ui(surface):
@@ -61,6 +60,8 @@ def draw_game_over_ui(surface):
 
 while config.Game.running:
     FPS.tick(60)
+    if config.error != 0:
+        config.Game.running = False
 
     if config.game_over == False:
         if config.blink_timer < 60:
@@ -83,13 +84,15 @@ while config.Game.running:
                         if player.health < 100:
                             player.health += 10
                 if event.key == pygame.K_SPACE or event.key == pygame.K_z:
-                    # Create the bullet at the player's current position
-                    if player.energy > 0:
-                        new_bullet = bullet.Normal(player.rect.centerx, player.rect.top)
-                        bullets.append(new_bullet)
-                        player.energy -= 5
-                    else:
-                        config.blink_timer = 0
+                    if config.game_over == False:
+                        # Create the bullet at the player's current position
+                        if player.energy > 0:
+                            new_bullet = bullet.Normal(player.rect.centerx, player.rect.top)
+                            bullets.append(new_bullet)
+                            assets.Sounds.player_shoot.play()
+                            player.energy -= 5
+                        else:
+                            config.blink_timer = 0
                             
                 if event.key == pygame.K_F12:
                     config.debug = not config.debug
@@ -182,6 +185,7 @@ while config.Game.running:
             # Check Bullet Collision
             for b in bullets[:]:
                 if e.rect.colliderect(b.rect):
+                    assets.Sounds.entity_damage.play()
                     if e in enemies: enemies.remove(e)
                     if b in bullets: bullets.remove(b)
                     break # Enemy is dead, stop checking bullets for it
@@ -320,5 +324,11 @@ while config.Game.running:
         draw_game_over_ui(scr)
 
     pygame.display.flip()
+
+
+print(f"Exited with error code: {config.error}")
+if config.error_text != "":
+    print(f"[{config.datetime.datetime.now()}] CRITICAL: Task failed in: {config.error_origin.name}")
+    print(f"Code: {config.error} | Message: {config.error_text}")
 
 pygame.quit()

@@ -4,9 +4,15 @@ import os
 import subprocess
 import math
 import pygame
+import pathlib
+import datetime
 
 WIN_PATH = os.getcwd()
 SPRITE_SCALING = 6
+
+error = 0000
+error_text = ""
+error_origin = pathlib.Path()
 
 delay = 60
 
@@ -41,7 +47,6 @@ class Screen:
 class Game:
     title = "Galactic Space Reborn"
     running = True
-    players = []
 
 if __name__ == "__main__":
     print("Execution of module detected! Please run main.py for the game to work properly.")
