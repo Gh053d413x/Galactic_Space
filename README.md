@@ -38,3 +38,6 @@ The Game is in VERY early development, please do not expect all features from th
 - Modified how powerups work
 - Added invincibility powerup
 - Added invincibility.wav to the game files
+- Partially Added score system
+
+Thank you for seeing my progress on this ambitious project!
