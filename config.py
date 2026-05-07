@@ -22,11 +22,15 @@ debug = False
 
 score = 0
 
+high_score = 0
+
 powerup_timer = 0
 
 powerup_active = False
 
-powerup_type = ""
+powerup_type = 0
+
+powerup_type_text = "powerup_display.identifier.txt"
 
 frame = 0
 

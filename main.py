@@ -22,9 +22,6 @@ scr = pygame.display.set_mode((config.Screen.Size.w, config.Screen.Size.h))
 
 pygame.display.set_caption(config.Game.title)
 
-# ... (imports and Game class stay the same)
-
-# FIX: Removed the ', 0' so it uses the default texture correctly
 player = entity.Player(config.Screen.Size.w / 2 - 20, config.Screen.Size.h / 2 - 20)# Instead of manual math:
 player_rect = player.image.get_rect(center=(config.Screen.Size.w / 2, config.Screen.Size.h / 2))
 player.x, player.y = player_rect.topleft
@@ -123,16 +120,20 @@ while config.Game.running:
                 config.HEALTH_COLOR_LOW = (255, 255, 255) # White
                 config.HEALTH_COLOR_MED = (255, 255, 255) # White
                 config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
-                config.BACKGROUND_HEALTH_COLOR = (166, 51, 51) # Red
+                config.BACKGROUND_HEALTH_COLOR = (204, 53, 53) # Red
             else:
-                config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
-                config.HEALTH_COLOR_HIGH = (255, 168, 82) # High Health Color (Green)
+                if player.invincible == True and config.powerup_active == True:
+                    config.HEALTH_COLOR_HIGH = (219, 157, 0) # Invincible Health Color (Gold)
+                else:
+                    config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
                 config.HEALTH_COLOR_MED = (255, 255, 0) # Medium Health Color (Yellow)
                 config.HEALTH_COLOR_LOW = (255, 0, 0) # Low Health Color (Red)
                 config.HEALTH_COLOR_DRAIN = (135, 242, 255) # Drain Color (Cyan)
+                config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
         else:
-            if player.invincible == True:
-                config.HEALTH_COLOR_HIGH = (184, 125, 0) # Invincible Health Color (Gold)
+            if player.invincible == True and config.powerup_active == True:
+                config.HEALTH_COLOR_HIGH = (219, 157, 0) # Invincible Health Color (Gold)
+                print("Yellow")
             else:
                 config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
                 config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
@@ -169,7 +170,7 @@ while config.Game.running:
         
         if config.delay == random.randint(1, 60): # Trigger exactly halfway through the enemy spawn cycle
             chance = random.randint(0, 99)
-            print(f"Roll: {chance}")
+            print(f"Roll (%): {chance}")
 
             # Check for Health
             if player.health <= 95 and 0 <= chance <= 15:
@@ -184,8 +185,8 @@ while config.Game.running:
                 powerup.append(new_powerup)
             
             if config.powerup_active == False:
-                # Check for 10% Chance, regardless of health and ammo
-                if 50 <= chance <= 60:
+                # Check for 5% Chance, regardless of health and ammo
+                if 50 <= chance <= 55:
                     print("Power Wrench Powerup Summoned!")
                     new_powerup = entity.PowerUp(random.randint(48, 874), -75, 1)
                     powerup.append(new_powerup)
@@ -194,8 +195,11 @@ while config.Game.running:
             if config.powerup_timer > 0:
                 config.powerup_timer -= 1
         
-        if config.powerup_timer <= 0:
-            config.health_blink_timer = 0
+        if config.powerup_timer <= 0 and config.powerup_active == True:
+            if config.powerup_type == 0:
+                config.health_blink_timer = 0
+                config.powerup_active = False
+                player.invincible = False
 
 
         # --- ONE LOOP TO RULE THEM ALL ---
@@ -264,6 +268,9 @@ while config.Game.running:
                         player.health = 100
                     config.powerup_timer = 15
                     player.invincible = True
+                    config.powerup_active = True
+                    assets.load_music(assets.Music.invincibility)
+                    pygame.mixer.music.play()
                     
 
                 if p in powerup: powerup.remove(p)

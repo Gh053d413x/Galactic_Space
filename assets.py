@@ -70,7 +70,10 @@ try:
     class Music:
         """Base Class for Music"""
 
-        invincibility = pygame.mixer.Sound(f"{config.WIN_PATH}/music/invincibility.wav")
+        invincibility = f"{config.WIN_PATH}/music/invincibility.wav"
+
+    def load_music(song, songhint: str = ""):
+        pygame.mixer.music.load(filename=song, namehint=songhint)
 
 except Exception as e:
     config.error = 1010
