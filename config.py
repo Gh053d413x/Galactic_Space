@@ -24,6 +24,10 @@ score = 0
 
 high_score = 0
 
+HIGH_SCORE_FILE = f"{WIN_PATH}/high_score.txt"
+
+HIGH_SCORE_FILE_EXISTS = pathlib.Path.exists(HIGH_SCORE_FILE)
+
 powerup_timer = 0
 
 powerup_active = False

@@ -56,6 +56,7 @@ try:
         class UI:
             """UI Class for Textures"""
             panel_01 = pygame.image.load(f"{config.WIN_PATH}/textures/ui/panel/panel_01.png")
+            panel_02 = pygame.image.load(f"{config.WIN_PATH}/textures/ui/panel/panel_02.png")
             game_over = pygame.transform.scale_by(RawTextures.game_over_unscaled, config.SPRITE_SCALING)
 
 
@@ -71,6 +72,7 @@ try:
         """Base Class for Music"""
 
         invincibility = f"{config.WIN_PATH}/music/invincibility.wav"
+
 
     def load_music(song, songhint: str = ""):
         pygame.mixer.music.load(filename=song, namehint=songhint)

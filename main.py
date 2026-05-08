@@ -38,6 +38,11 @@ def game_over():
     print("Game Over!")
     assets.Sounds.player_death.play()
     config.game_over = True
+    if config.score > config.high_score:
+        config.high_score = config.score
+        with open(config.HIGH_SCORE_FILE, "w") as file:
+            file.write(str(config.high_score))
+        print("High Score Saved!")
 
 def draw_game_over_ui(surface):
     # 1. Create a temporary surface with the same size as the screen
@@ -55,13 +60,21 @@ def draw_game_over_ui(surface):
 
     surface.blit(assets.Textures.UI.game_over, (config.Screen.Size.w/2 - assets.Textures.UI.game_over.width/2, config.Screen.Size.h/2 - assets.Textures.UI.game_over.height/2))
 
+if not config.HIGH_SCORE_FILE_EXISTS:
+    with open(config.HIGH_SCORE_FILE, "w") as file:
+        file.write(str(config.high_score))
+else:
+    with open(config.HIGH_SCORE_FILE, "r") as file:
+        config.high_score = int(file.read().strip())
 
 while config.Game.running:
     FPS.tick(60)
 
     config.frame += 1
 
-    timer_str = monocraft.render(f"{config.powerup_type}: {config.powerup_timer}", True, (255,255,255))
+    timer_str = monocraft.render(f"{config.powerup_type_text}: {config.powerup_timer}", True, (255,255,255))
+    score_str = monocraft.render(f"{config.score}", True, (255,255,255))
+    high_score_str = monocraft.render(f"{config.high_score}", True, (255,255,255))
 
     if config.error != 0:
         config.Game.running = False
@@ -81,11 +94,10 @@ while config.Game.running:
             if event.type == pygame.KEYDOWN:
                 if config.debug:
                     if event.key == pygame.K_KP_PLUS:
-                        if player.energy < 100:
-                            player.energy += 10
-                    if event.key == pygame.K_KP_MINUS:
-                        if player.health < 100:
-                            player.health += 10
+                        if config.score < 10:
+                            config.score += 10
+                        else:
+                            config.score += config.score * 10
                 if event.key == pygame.K_SPACE or event.key == pygame.K_z:
                     if config.game_over == False:
                         # Create the bullet at the player's current position
@@ -217,6 +229,7 @@ while config.Game.running:
                     assets.Sounds.entity_damage.play()
                     if e in enemies: enemies.remove(e)
                     if b in bullets: bullets.remove(b)
+                    config.score += 1
                     break # Enemy is dead, stop checking bullets for it
 
             # Check Player Collision
@@ -271,6 +284,7 @@ while config.Game.running:
                     config.powerup_active = True
                     assets.load_music(assets.Music.invincibility)
                     pygame.mixer.music.play()
+                    config.powerup_type_text = "Invincibility"
                     
 
                 if p in powerup: powerup.remove(p)
@@ -278,6 +292,22 @@ while config.Game.running:
             p.draw(scr) # Draw it here
 
         scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
+        scr.blit(assets.Textures.UI.panel_02, (config.Screen.Size.w-246, config.Screen.Size.h-195))
+
+        # Modifies the X position of score and high score when a new digit is reached, like if you go from 9 to 10
+        text_width = score_str.get_width()
+        margin = 20
+        score_x_pos = config.Screen.Size.w - text_width - margin
+
+        text_width = high_score_str.get_width()
+        margin = 20
+        hi_x_pos = config.Screen.Size.w - text_width - margin
+    
+        scr.blit(score_str, (score_x_pos, 20+config.Screen.Size.h-187))
+        scr.blit(high_score_str, (hi_x_pos, 87+config.Screen.Size.h-187))
+
+        # This ensures the score never exceeds 9,999,999,999
+        config.score = min(config.score, 9999999999)
 
         # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
         pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))

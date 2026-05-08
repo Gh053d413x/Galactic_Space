@@ -33,3 +33,6 @@ build/
 .coverage
 .cache
 .pytest_cache/
+
+# High Score File
+high_score.txt
