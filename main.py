@@ -2,8 +2,6 @@
 # Copyright (c) Ghosted Alex 2026
 # Made under the MIT license: https://opensource.org/license/mit
 
-VER: str = "dev_build.7.1"
-
 import os
 import random
 import pygame
