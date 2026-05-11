@@ -16,6 +16,8 @@ error_origin = pathlib.Path()
 
 delay = 60
 
+game_over_delay = 180
+
 difficulty = 0
 
 debug = False
@@ -52,6 +54,7 @@ blink_timer = 60
 health_blink_timer = 60
 
 game_over = False
+game_over_ui_shown = False
 
 class Screen:
     "Base Class for Screen"

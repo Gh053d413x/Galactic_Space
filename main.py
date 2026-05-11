@@ -56,9 +56,27 @@ def draw_game_over_ui(surface):
     # 3. Blit the overlay onto the main screen
     surface.blit(overlay, (0, 0))
 
-    # 4. Draw your text on top
+    # 4. Let the game know that the game over UI was shown
+    config.game_over_ui_shown = True
 
-    surface.blit(assets.Textures.UI.game_over, (config.Screen.Size.w/2 - assets.Textures.UI.game_over.width/2, config.Screen.Size.h/2 - assets.Textures.UI.game_over.height/2))
+    if config.score < config.high_score:
+        config.high_score = config.score
+    else:
+        with open(config.HIGH_SCORE_FILE, "r") as file:
+            config.high_score = int(file.read().strip())
+
+    # 5. Create text lines
+    if config.score <= config.high_score:
+        score_go_str = monocraft.render(f"Score: {config.score}", True, (255, 255, 255))
+    else:
+        score_go_str = monocraft.render(f"New High Score!", True, (255, 180, 0))
+    hi_score_go_str = monocraft.render(f"High Score: {config.score}", True, (255, 255, 255))
+
+    # 6. Draw the UI on top
+    surface.blit(assets.Textures.UI.game_over, (318, 225))
+    surface.blit(score_go_str, (390, 275))
+    surface.blit(hi_score_go_str, (350, 315))
+
 
 if not config.HIGH_SCORE_FILE_EXISTS:
     with open(config.HIGH_SCORE_FILE, "w") as file:
@@ -98,6 +116,8 @@ while config.Game.running:
                             config.score += 10
                         else:
                             config.score += config.score * 10
+                    if event.key == pygame.K_1:
+                        game_over()
                 if event.key == pygame.K_SPACE or event.key == pygame.K_z:
                     if config.game_over == False:
                         # Create the bullet at the player's current position
@@ -363,45 +383,47 @@ while config.Game.running:
                     config.game_over = False
                     player.health = 100
                     enemies.clear()
-        scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
 
-        # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
-        pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
+        if not config.game_over_ui_shown:
+            scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
 
-        pygame.draw.rect(scr, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
+            config.HEALTH_COLOR_DRAIN = config.BACKGROUND_HEALTH_COLOR
 
-        if player.health > 50:
-            pygame.draw.rect(scr, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
-        if 50 >= player.health > 25:
-            pygame.draw.rect(scr, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
-        if player.health <= 25:
-            pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
-        if player.health <= 0:
-            game_over()
-            
-        if player.health_drain > player.health:
-            player.health_drain -= .1
-        elif player.health_drain < player.health:
-            player.health_drain = player.health
+            # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
+            pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
 
-        # 1. Background Bar (The gray slot)
-        # Starts at 507, width 400 (507 + 400 = 907)
-        pygame.draw.rect(scr, config.BACKGROUND_ENERGY_COLOR, (507, 656, 400, 25))
+            pygame.draw.rect(scr, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
 
-        # 2. The Draining Logic
-        # We calculate the width first
-        energy_width = player.energy * 4
+            if player.health > 50:
+                pygame.draw.rect(scr, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
+            if 50 >= player.health > 25:
+                pygame.draw.rect(scr, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
+            if player.health <= 25:
+                pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
+                
+            if player.health_drain > player.health:
+                player.health_drain -= .1
+            elif player.health_drain < player.health:
+                player.health_drain = player.health
 
-        # To make it "reverse," we push the X-coordinate forward by the missing amount
-        # 507 + (400 - energy_width)
-        reverse_x = 507 + (400 - energy_width)
+            # 1. Background Bar (The gray slot)
+            # Starts at 507, width 400 (507 + 400 = 907)
+            pygame.draw.rect(scr, config.BACKGROUND_ENERGY_COLOR, (507, 656, 400, 25))
 
-        # 3. Draw the Energy Bar (Yellow)
-        if player.energy > 0:
-            pygame.draw.rect(scr, config.ENERGY_COLOR, (reverse_x, 656, energy_width, 25))
+            # 2. The Draining Logic
+            # We calculate the width first
+            energy_width = player.energy * 4
 
-        # Draw the transparent GUI
-        draw_game_over_ui(scr)
+            # To make it "reverse," we push the X-coordinate forward by the missing amount
+            # 507 + (400 - energy_width)
+            reverse_x = 507 + (400 - energy_width)
+
+            # 3. Draw the Energy Bar (Yellow)
+            if player.energy > 0:
+                pygame.draw.rect(scr, config.ENERGY_COLOR, (reverse_x, 656, energy_width, 25))
+
+            # Draw the transparent GUI
+            draw_game_over_ui(scr)
 
     pygame.display.flip()
 
