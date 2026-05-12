@@ -7,7 +7,7 @@ import pygame
 import pathlib
 import datetime
 
-WIN_PATH = os.getcwd()
+WIN_PATH = pathlib.Path(__file__).resolve().parent
 SPRITE_SCALING = 6
 
 error = 0000
@@ -26,7 +26,7 @@ score = 0
 
 high_score = 0
 
-HIGH_SCORE_FILE = f"{WIN_PATH}/high_score.txt"
+HIGH_SCORE_FILE = pathlib.Path(f"{WIN_PATH}/high_score.txt")
 
 HIGH_SCORE_FILE_EXISTS = pathlib.Path.exists(HIGH_SCORE_FILE)
 
@@ -55,6 +55,10 @@ health_blink_timer = 60
 
 game_over = False
 game_over_ui_shown = False
+
+class Keybinds:
+    restart_key = pygame.K_r
+    quit_key = pygame.K_ESCAPE
 
 class Screen:
     "Base Class for Screen"
