@@ -31,11 +31,11 @@ The Game is in VERY early development, please do not expect all features from th
 
 ---
 
-## Latest Patch for `dev_build.7.3`
+## Latest Patch for `dev_build.7.4`
 
-### Enhancement v1
+### Enhancement v2
 
-- Modified Player Death Sound
-- Fixed Game Over Screen
-- Added 'game_over_ui_shown' 
-- Added debug key to instantly game over
+- Modified paths to use pathlib.Path
+- Added a Trophy Texture
+- Fixed a bug where High Score was not showing properly in Game Over screen
+- Added instruction to press `<reset key>` to restart game
