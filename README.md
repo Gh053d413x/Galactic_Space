@@ -1,7 +1,7 @@
 # Galactic Space Reborn
 
-![Status Badge](https://img.shields.io/badge/Status-In_Development-orange)
-![Version Badge](https://img.shields.io/badge/Version-Dev_Build.7.4.1-green)
+![Status Badge](https://img.shields.io/badge/In_Development-orange)
+![Version Badge](https://img.shields.io/badge/Version-Dev_Build_7.4.1-green)
 
 Galactic Space is a space shooter where you need to shoot enemies, collect powerups and dodge. You can use a Makey-Makey or a Keyboard. Fight through the boss to get to the next difficulty. Who can get the most points?
 
@@ -13,14 +13,24 @@ Go to [Releases](https://github.com/Gh053d413x/Galactic_Space/releases/) to see 
 
 ## Licenses
 
-**Code:** [![Licence](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)](./LICENSE)
-[![MIT](https://img.shields.io/badge/MIT-purple?style=for-the-badge)](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_MIT)
 
-**Art:** [Creative Commons Zero v1.0 Universal](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_CCO)
+[![MIT](https://img.shields.io/badge/Code-MIT-green?style=for-the-badge)](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_MIT)
+<br />
+[![CCO](https://img.shields.io/badge/Assets-CCO-blue?style=for-the-badge)](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_CCO)
 
 ---
 
+## Requirements
+
+Turns out there are Requirements to run the game.
+
+![require python](https://img.shields.io/badge/Python-3.13/3.14-blue)
+<br />
+![require pygame](https://img.shields.io/badge/Pygame-2.1.3_or_above-red)
+
+
 ## Download
+
 You can download the assets and the game
 
 **Requires Python 3.13+ to run!**
