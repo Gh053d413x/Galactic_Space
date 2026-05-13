@@ -85,6 +85,11 @@ except Exception as e:
     # This automatically gets the current file's absolute path
     config.error_origin = config.pathlib.Path(__file__).resolve()
 
+    print(f"Error Loading One or More Assets ({config.error})")
+    print(f"Details of Error: {config.error_text}")
+    print(f"Error Came From: {config.error_origin}")
+    print(f"Current Working Directory: {config.WIN_PATH}")
+
 
 # -------------------------------------
 

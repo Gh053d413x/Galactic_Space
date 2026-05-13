@@ -1,6 +1,7 @@
 # Galactic Space Reborn
 
-`Prerelease`
+![Status Badge](https://img.shields.io/badge/Status-In_Development-orange)
+![Version Badge](https://img.shields.io/badge/Version-Dev_Build.7.4.1-green)
 
 Galactic Space is a space shooter where you need to shoot enemies, collect powerups and dodge. You can use a Makey-Makey or a Keyboard. Fight through the boss to get to the next difficulty. Who can get the most points?
 
@@ -12,7 +13,8 @@ Go to [Releases](https://github.com/Gh053d413x/Galactic_Space/releases/) to see 
 
 ## Licenses
 
-**Code:** [MIT](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_MIT)
+**Code:** [![Licence](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)](./LICENSE)
+[![MIT](https://img.shields.io/badge/MIT-purple?style=for-the-badge)](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_MIT)
 
 **Art:** [Creative Commons Zero v1.0 Universal](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_CCO)
 
@@ -31,11 +33,10 @@ The Game is in VERY early development, please do not expect all features from th
 
 ---
 
-## Latest Patch for `dev_build.7.4`
+## Latest Patch for `Dev Build 7.4.1`
 
-### Enhancement v2
+![Update Badge](https://img.shields.io/badge/Update_Type-Hotfix-blue)
 
-- Modified paths to use pathlib.Path
-- Added a Trophy Texture
-- Fixed a bug where High Score was not showing properly in Game Over screen
-- Added instruction to press `<reset key>` to restart game
+### Error Control!
+
+- Added Verbosity-Type Error Handling to `assets.py`
