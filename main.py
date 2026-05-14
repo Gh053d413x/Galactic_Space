@@ -317,7 +317,7 @@ while config.Game.running:
             p.draw(scr) # Draw it here
 
         if config.score > config.high_score:
-            config.high_score += 1
+            config.high_score = config.score
 
         scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
         scr.blit(assets.Textures.UI.panel_02, (config.Screen.Size.w-246, config.Screen.Size.h-195))
@@ -336,6 +336,7 @@ while config.Game.running:
 
         # This ensures the score never exceeds 999,999
         config.score = min(config.score, 999999)
+        config.high_score = min(config.high_score, 999999)
 
         # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
         pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))

@@ -22,18 +22,16 @@ Go to [Releases](https://github.com/Gh053d413x/Galactic_Space/releases/) to see 
 
 ## Requirements
 
-Turns out there are Requirements to run the game.
+Minimum | Recommeded
+:---------:|:---------:
+![require python](https://img.shields.io/badge/Python-3.10-blue) | ![require python](https://img.shields.io/badge/Python-3.13-purple)
+![require pygame](https://img.shields.io/badge/Pygame-2.1.3-red) | ![require pygame](https://img.shields.io/badge/Pygame-2.5.7-green)
 
-![require python](https://img.shields.io/badge/Python-3.13/3.14-blue)
-<br />
-![require pygame](https://img.shields.io/badge/Pygame-2.1.3_or_above-red)
 
 
 ## Download
 
-You can download the assets and the game
-
-**Requires Python 3.13+ to run!**
+You can download the assets and source code of the game
 
 ---
 
@@ -50,3 +48,18 @@ The Game is in VERY early development, please do not expect all features from th
 ### Error Control!
 
 - Added Verbosity-Type Error Handling to `assets.py`
+
+---
+
+## Repo Updates:
+
+![Update Badge](https://img.shields.io/badge/Update_Type-Minor-purple)
+
+### Current Repository update includes:
+
+- Changes to the `Requirements` section of README:
+  - Changed `Requirements` section to a table with `Minimum` and `Recommended` sections respectively.
+  - Added this section and is only temperary until permanent
+
+> [!NOTE]
+> Test
