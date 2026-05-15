@@ -41,15 +41,9 @@ The Game is in VERY early development, please do not expect all features from th
 
 ---
 
-<<<<<<< HEAD
-## Latest Patch for `dev_build.8`
-
-### 
-=======
 ## Latest Patch for `Dev Build 7.4.1`
 
 ![Update Badge](https://img.shields.io/badge/Update_Type-Hotfix-blue)
->>>>>>> 8da15c44f4c070c58bb4faba08c2557537738336
 
 ### Error Control!
 
