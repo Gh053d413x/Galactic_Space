@@ -8,19 +8,24 @@ import bullet
 
 class Player:
     """Instance Class for player"""
-    def __init__(self, x: int, y: int, texture: pygame.surface.Surface = assets.Textures.Player.player0):
+    def __init__(self, x: int, y: int, c: int = 0):
         self.x = x
         self.y = y
         self.speed = 8
         self.health = 100
         self.health_drain = 100
         self.energy = 100
-        
-        self.image = texture
-
+        self.texture = None
         self.invincible = False
+
+        # Logic to pick texture based on the 'c' (color/type) argument
+        if c == 0:
+            self.texture = assets.Textures.Player.player0
+        else:
+            self.texture = assets.Textures.Player.player_blank
+
         # This creates a Rect exactly the size of your image
-        self.rect = self.image.get_rect(topleft=(self.x, self.y))
+        self.rect = self.texture.get_rect(topleft=(self.x, self.y))
 
     def draw(self, surface):
         """Blits the player texture\n
@@ -107,43 +112,6 @@ class Enemy:
         
         if config.debug:
             pygame.draw.rect(surface, (255, 51, 51), self.rect, 1)
-
-class PowerUp:
-    def __init__(self, x: int, y: int, powerUpType: int):
-        self.x = x
-        self.y = y
-        self.type = powerUpType
-
-        if self.type == 0:
-            self.image = assets.Textures.PowerUp.wrench
-        elif self.type == 1:
-            self.image = assets.Textures.PowerUp.power_wrench
-        elif self.type == 2:
-            self.image = assets.Textures.PowerUp.ammo
-
-        self.rect = self.image.get_rect(topleft=(self.x, self.y))
-        self.speed = 3
-
-    def move(self):
-        """Updates position based on type"""
-        if self.type == 0: # Standard Wrench
-            self.y += self.speed
-        if self.type == 1:
-            self.y += self.speed+1
-        if self.type == 2:
-            self.y += self.speed-1
-
-    def update(self):
-        # Call move and then update the rect
-        self.rect.topleft = (self.x, self.y)
-
-    def draw(self, surface):
-        # Use self.rect instead of (self.x, self.y)
-        surface.blit(self.image, self.rect) 
-        
-        if config.debug:
-            pygame.draw.rect(surface, (255, 51, 51), self.rect, 1)
-
 
 # armada = [] #create empty list
 # for i in range (4): #handles rows

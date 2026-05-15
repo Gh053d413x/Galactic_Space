@@ -31,8 +31,8 @@ The Game is in VERY early development, please do not expect all features from th
 
 ---
 
-## Latest Patch for `dev_build.7.2`
+## Latest Patch for `dev_build.8`
 
-### Haymaker Update
+### 
 
 

@@ -6,11 +6,9 @@ import config
 import assets
 
 class Normal:
-    def __init__(self, x, y, image=assets.Textures.Bullet.blank):     
-        self.image = image
-        # Use the image's rect to handle positioning and collisions
-        self.rect = self.image.get_rect(center=(x, y))
-        self.speed = 25
+    def __init__(self, x, y, image=None):
+        self.image = image if image else assets.Textures.Bullet.blank
+        self.rect = self.image.get_rect(topleft=(x, y))
 
     def update(self):
         # Move the rect, which is the "source of truth" for position

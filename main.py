@@ -10,17 +10,21 @@ import pygame
 import assets
 import config
 import entity
+import powerup
 import bullet
 
-FPS = pygame.time.Clock()
+def initialize():
+    global FPS, SCR
 
-pygame.init()
+    pygame.init()
+    
+    FPS = pygame.time.Clock()
 
-monocraft = pygame.font.Font(f"{config.WIN_PATH}/fonts/Monocraft.ttf", 30)
+    SCR = pygame.display.set_mode((config.Screen.Size.w, config.Screen.Size.h))
 
-scr = pygame.display.set_mode((config.Screen.Size.w, config.Screen.Size.h))
+    pygame.display.set_caption(config.Game.title)
 
-pygame.display.set_caption(config.Game.title)
+    return FPS, SCR
 
 player = entity.Player(config.Screen.Size.w / 2 - 20, config.Screen.Size.h / 2 - 20)# Instead of manual math:
 player_rect = player.image.get_rect(center=(config.Screen.Size.w / 2, config.Screen.Size.h / 2))
@@ -32,7 +36,7 @@ a1 = entity.Enemy(random.randint(16, 906), -5, assets.Textures.Enemy.enemy0, 0)
 
 enemies = []
 bullets = []
-powerup = []
+powerups = []
 
 def game_over():
     print("Game Over!")
@@ -45,6 +49,8 @@ def game_over():
         print("High Score Saved!")
 
 def draw_game_over_ui(surface):
+    config.game_over_ui_shown = True
+
     # 1. Create a temporary surface with the same size as the screen
     # pygame.SRCALPHA makes it capable of transparency
     overlay = pygame.Surface((config.Screen.Size.w, config.Screen.Size.h), pygame.SRCALPHA)
@@ -67,14 +73,16 @@ else:
     with open(config.HIGH_SCORE_FILE, "r") as file:
         config.high_score = int(file.read().strip())
 
+FPS, SCR = initialize()
+
 while config.Game.running:
     FPS.tick(60)
 
     config.frame += 1
-
-    timer_str = monocraft.render(f"{config.powerup_type_text}: {config.powerup_timer}", True, (255,255,255))
-    score_str = monocraft.render(f"{config.score}", True, (255,255,255))
-    high_score_str = monocraft.render(f"{config.high_score}", True, (255,255,255))
+    
+    timer_str = assets.monocraft.render(f"{config.powerup_type_text}: {config.powerup_timer}", True, (255,255,255))
+    score_str = assets.monocraft.render(f"{config.score}", True, (255,255,255))
+    high_score_str = assets.monocraft.render(f"{config.high_score}", True, (255,255,255))
 
     if config.error != 0:
         config.Game.running = False
@@ -119,11 +127,11 @@ while config.Game.running:
         if config.blink_timer < 60:
             # This checks if the timer is in the first or second half of a 30-frame cycle
             if (config.blink_timer // 15) % 2 == 0:
-                config.BACKGROUND_ENERGY_COLOR = (166, 51, 51) # Red
+                config.BACKGROUND_AMMO_COLOR = (166, 51, 51) # Red
             else:
-                config.BACKGROUND_ENERGY_COLOR = (15, 15, 15)  # Dark
+                config.BACKGROUND_AMMO_COLOR = (15, 15, 15)  # Dark
         else:
-            config.BACKGROUND_ENERGY_COLOR = (15, 15, 15) # Default Dark
+            config.BACKGROUND_AMMO_COLOR = (15, 15, 15) # Default Dark
         
         if config.health_blink_timer < 60:
             # This checks if the timer is in the first or second half of a 30-frame cycle
@@ -145,7 +153,6 @@ while config.Game.running:
         else:
             if player.invincible == True and config.powerup_active == True:
                 config.HEALTH_COLOR_HIGH = (219, 157, 0) # Invincible Health Color (Gold)
-                print("Yellow")
             else:
                 config.BACKGROUND_HEALTH_COLOR = (15, 15, 15)
                 config.HEALTH_COLOR_HIGH = (50, 168, 82) # High Health Color (Green)
@@ -157,19 +164,19 @@ while config.Game.running:
 
         # RENDERING
         # Inside your "RENDERING" section in main.py
-        scr.fill((0, 0, 0))
+        SCR.fill((0, 0, 0))
 
         # Update and Draw Bullets
         for b in bullets[:]: # [:] creates a copy so we can safely remove items
             b.update()
-            b.draw(scr)
+            b.draw(SCR)
             
             # Optimization: Delete bullet if it leaves the screen
             if b.rect.bottom < 0:
                 bullets.remove(b)
 
         player.handle_input(keys)
-        player.draw(scr)
+        player.draw(SCR)
 
         config.delay -= 1
         if config.delay < 0:
@@ -187,21 +194,21 @@ while config.Game.running:
             # Check for Health
             if player.health <= 95 and 0 <= chance <= 15:
                 print("Wrench Powerup Summoned!")
-                new_powerup = entity.PowerUp(random.randint(48, 874), -75, 0)
-                powerup.append(new_powerup)
+                new_powerup = powerup.Spawn(random.randint(48, 874), -75, 0)
+                powerups.append(new_powerup)
                 
             # Check for Ammunition (Independent or Else-If)
             if player.energy <= 95 and 16 <= chance <= 50:
                 print("Ammo Powerup Summoned!")
-                new_powerup = entity.PowerUp(random.randint(48, 874), -75, 2)
-                powerup.append(new_powerup)
+                new_powerup = powerup.Spawn(random.randint(48, 874), -75, 2)
+                powerups.append(new_powerup)
             
             if config.powerup_active == False:
                 # Check for 5% Chance, regardless of health and ammo
                 if 50 <= chance <= 55:
                     print("Power Wrench Powerup Summoned!")
-                    new_powerup = entity.PowerUp(random.randint(48, 874), -75, 1)
-                    powerup.append(new_powerup)
+                    new_powerup = powerup.Spawn(random.randint(48, 874), -75, 1)
+                    powerups.append(new_powerup)
                     
         if config.delay == 0:
             if config.powerup_timer > 0:
@@ -249,15 +256,15 @@ while config.Game.running:
                 if player.invincible == True:
                     config.score += 1
 
-            e.draw(scr) # Draw it here
+            e.draw(SCR) # Draw it here
         
         
-        for p in powerup[:]:
+        for p in powerups[:]:
             p.move()    
             p.update()
 
             if p.y > config.Screen.Size.h:
-                powerup.remove(p)
+                powerups.remove(p)
                 continue
 
             # Check Player Collision
@@ -279,7 +286,7 @@ while config.Game.running:
                     config.health_blink_timer = 0
                     if player.health < 100:
                         player.health = 100
-                    config.powerup_timer = 15
+                    config.powerup_timer = 16
                     player.invincible = True
                     config.powerup_active = True
                     assets.load_music(assets.Music.invincibility)
@@ -287,12 +294,12 @@ while config.Game.running:
                     config.powerup_type_text = "Invincibility"
                     
 
-                if p in powerup: powerup.remove(p)
+                if p in powerup: powerups.remove(p)
 
-            p.draw(scr) # Draw it here
+            p.draw(SCR) # Draw it here
 
-        scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
-        scr.blit(assets.Textures.UI.panel_02, (config.Screen.Size.w-246, config.Screen.Size.h-195))
+        SCR.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
+        SCR.blit(assets.Textures.UI.panel_02, (config.Screen.Size.w-246, config.Screen.Size.h-195))
 
         # Modifies the X position of score and high score when a new digit is reached, like if you go from 9 to 10
         text_width = score_str.get_width()
@@ -303,23 +310,23 @@ while config.Game.running:
         margin = 20
         hi_x_pos = config.Screen.Size.w - text_width - margin
     
-        scr.blit(score_str, (score_x_pos, 20+config.Screen.Size.h-187))
-        scr.blit(high_score_str, (hi_x_pos, 87+config.Screen.Size.h-187))
+        SCR.blit(score_str, (score_x_pos, 20+config.Screen.Size.h-187))
+        SCR.blit(high_score_str, (hi_x_pos, 87+config.Screen.Size.h-187))
 
         # This ensures the score never exceeds 9,999,999,999
         config.score = min(config.score, 9999999999)
 
         # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
-        pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
+        pygame.draw.rect(SCR, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
 
-        pygame.draw.rect(scr, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
+        pygame.draw.rect(SCR, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
 
         if player.health > 50:
-            pygame.draw.rect(scr, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
+            pygame.draw.rect(SCR, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
         if 50 >= player.health > 25:
-            pygame.draw.rect(scr, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
+            pygame.draw.rect(SCR, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
         if player.health <= 25:
-            pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
+            pygame.draw.rect(SCR, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
         if player.health <= 0:
             game_over()
         
@@ -330,7 +337,7 @@ while config.Game.running:
 
         # 1. Background Bar (The gray slot)
         # Starts at 507, width 400 (507 + 400 = 907)
-        pygame.draw.rect(scr, config.BACKGROUND_ENERGY_COLOR, (507, 656, 400, 25))
+        pygame.draw.rect(SCR, config.BACKGROUND_AMMO_COLOR, (507, 656, 400, 25))
 
         # 2. The Draining Logic
         # We calculate the width first
@@ -342,7 +349,7 @@ while config.Game.running:
 
         # 3. Draw the Energy Bar (Yellow)
         if player.energy > 0:
-            pygame.draw.rect(scr, config.ENERGY_COLOR, (reverse_x, 656, energy_width, 25))
+            pygame.draw.rect(SCR, config.AMMO_COLOR, (reverse_x, 656, energy_width, 25))
 
         if player.health > 100:
             player.health = 100
@@ -350,8 +357,9 @@ while config.Game.running:
             player.energy = 100
 
         if config.powerup_timer > 0:
-            scr.blit(timer_str, (20, 20))
-            print(config.powerup_timer)
+            if config.debug:
+                SCR.blit(timer_str, (20, 20))
+                print(config.powerup_timer)
     else:
         # This runs when the game is over
         for event in pygame.event.get():
@@ -361,47 +369,50 @@ while config.Game.running:
                 if event.key == pygame.K_r: # Example: Restart game
                     # Reset your variables here
                     config.game_over = False
+                    config.game_over_ui_shown = False
                     player.health = 100
                     enemies.clear()
-        scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
 
-        # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
-        pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
+        if config.game_over_ui_shown == False:
+            SCR.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
 
-        pygame.draw.rect(scr, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
+            # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
+            pygame.draw.rect(SCR, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
 
-        if player.health > 50:
-            pygame.draw.rect(scr, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
-        if 50 >= player.health > 25:
-            pygame.draw.rect(scr, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
-        if player.health <= 25:
-            pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
-        if player.health <= 0:
-            game_over()
-            
-        if player.health_drain > player.health:
-            player.health_drain -= .1
-        elif player.health_drain < player.health:
-            player.health_drain = player.health
+            pygame.draw.rect(SCR, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
 
-        # 1. Background Bar (The gray slot)
-        # Starts at 507, width 400 (507 + 400 = 907)
-        pygame.draw.rect(scr, config.BACKGROUND_ENERGY_COLOR, (507, 656, 400, 25))
+            if player.health > 50:
+                pygame.draw.rect(SCR, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
+            if 50 >= player.health > 25:
+                pygame.draw.rect(SCR, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
+            if player.health <= 25:
+                pygame.draw.rect(SCR, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
+            if player.health <= 0:
+                game_over()
 
-        # 2. The Draining Logic
-        # We calculate the width first
-        energy_width = player.energy * 4
+            if player.health_drain > player.health:
+                player.health_drain -= .1
+            elif player.health_drain < player.health:
+                player.health_drain = player.health
 
-        # To make it "reverse," we push the X-coordinate forward by the missing amount
-        # 507 + (400 - energy_width)
-        reverse_x = 507 + (400 - energy_width)
+            # 1. Background Bar (The gray slot)
+            # Starts at 507, width 400 (507 + 400 = 907)
+            pygame.draw.rect(SCR, config.BACKGROUND_AMMO_COLOR, (507, 656, 400, 25))
 
-        # 3. Draw the Energy Bar (Yellow)
-        if player.energy > 0:
-            pygame.draw.rect(scr, config.ENERGY_COLOR, (reverse_x, 656, energy_width, 25))
+            # 2. The Draining Logic
+            # We calculate the width first
+            energy_width = player.energy * 4
 
-        # Draw the transparent GUI
-        draw_game_over_ui(scr)
+            # To make it "reverse," we push the X-coordinate forward by the missing amount
+            # 507 + (400 - energy_width)
+            reverse_x = 507 + (400 - energy_width)
+
+            # 3. Draw the Energy Bar (Yellow)
+            if player.energy > 0:
+                pygame.draw.rect(SCR, config.AMMO_COLOR, (reverse_x, 656, energy_width, 25))
+
+            # Draw the transparent GUI
+            draw_game_over_ui(SCR)
 
     pygame.display.flip()
 
