@@ -1,51 +1,79 @@
 # Galactic Space Reborn
 
-![Status Badge](https://img.shields.io/badge/In_Development-orange)
+![Status Badge](https://img.shields.io/badge/Status-In_Development-orange)
 ![Version Badge](https://img.shields.io/badge/Version-Dev_Build_7.4.1-green)
 
-Galactic Space is a space shooter where you need to shoot enemies, collect powerups and dodge. You can use a Makey-Makey or a Keyboard. Fight through the boss to get to the next difficulty. Who can get the most points?
+**Galactic Space** is a fast-paced space shooter where you blast enemies, collect power-ups, and dodge obstacles. Play with a keyboard or Makey Makey. Fight through increasingly difficult levels and take down bosses to prove who can achieve the highest score.
 
-This Repository is used to archive versions of Galactic Space and to show Sneak Peaks and Previews of future updates and just game updates in general
+This repository archives game versions, showcases upcoming features, and serves as the home for `Project: Galaxy`.
 
-Go to [Releases](https://github.com/Gh053d413x/Galactic_Space/releases/) to see all versions 
+> [!NOTE]
+> The Makey Makey is currently only available in the MakeCode Arcade Version, no plans in the Pygame version
 
 ---
 
 ## Licenses
 
 
-[![MIT](https://img.shields.io/badge/Code-MIT-green?style=for-the-badge)](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_MIT)
+[![MIT](https://img.shields.io/badge/Code-MIT-green)](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_MIT)
 <br />
-[![CCO](https://img.shields.io/badge/Assets-CCO-blue?style=for-the-badge)](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_CCO)
+[![CCO](https://img.shields.io/badge/Assets-CCO-blue)](https://github.com/Ghosted-Alex/Galactic_Space/blob/main/LICENSE_CCO)
 
 ---
 
 ## Requirements
 
-Minimum | Recommeded
-:---------:|:---------:
-![require python](https://img.shields.io/badge/Python-3.10-blue) | ![require python](https://img.shields.io/badge/Python-3.13-purple)
-![require pygame](https://img.shields.io/badge/Pygame-2.1.3-red) | ![require pygame](https://img.shields.io/badge/Pygame-2.5.7-green)
+|              | Minimum          | Recommended        |
+|--------------|:----------------:|:------------------:|
+| **Python**   | 3.10             | 3.13               |
+| **Pygame**   | 2.1.3            | 2.5.7              |
 
 
 
-## Download
+## Download & How to Play
+
+#### Download
 
 You can download the assets and source code of the game
 
+There are 2 ways to download/play the game currently:
+
+- You can Git Clone the Repo by using 
+    ```bash
+    git clone https://github.com/Ghosted-Alex/Galactic_Space
+    ```
+
+- Or you can go to the [releases](https://github.com/Ghosted-Alex/Galactic_Space_Reborn/releases) and click one of the releases and click/tap `Galactic Space Beta #.# Here`
+
+> [!NOTE]
+> The game is still in development which means not all features are in from the MakeCode Arcade version with the fact that there is no relaease, yet.
+
 ---
 
-## WARNING
+#### How to Play
 
-The Game is in VERY early development, please do not expect all features from the MakeCode version in here just yet!
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Ghosted-Alex/Galactic_Space.git
+   cd Galactic_Space
+   ```
+2. Install Dependancies:
+    ```bash
+    pip install pygame
+    ```
+3. Run the Game:
+    ```bash
+    python main.py
+    ```
 
 ---
 
-## Latest Patch for `Dev Build 7.4.1`
+## Game Updates
 
+![Version Badge](https://img.shields.io/badge/Version-Dev_Build_7.4.1-Yellow)
 ![Update Badge](https://img.shields.io/badge/Update_Type-Hotfix-blue)
 
-### Error Control!
+#### Error Control!
 
 - Added Verbosity-Type Error Handling to `assets.py`
 
@@ -55,11 +83,7 @@ The Game is in VERY early development, please do not expect all features from th
 
 ![Update Badge](https://img.shields.io/badge/Update_Type-Minor-purple)
 
-### Current Repository update includes:
-
-- Changes to the `Requirements` section of README:
-  - Changed `Requirements` section to a table with `Minimum` and `Recommended` sections respectively.
-  - Added this section and is only temperary until permanent
+- Changes to README and is now more detatiled and more Informational
 
 > [!NOTE]
-> Test
+> Repo Updates are only here if major repo related changes happen, Game Updates are above in the `Game Updates` section.
