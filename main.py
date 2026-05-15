@@ -2,10 +2,9 @@
 # Copyright (c) Ghosted Alex 2026
 # Made under the MIT license: https://opensource.org/license/mit
 
-VER: str = "dev_build.7.1"
-
 import os
 import random
+import subprocess
 import pygame
 import assets
 import config
@@ -42,7 +41,7 @@ def game_over():
     print("Game Over!")
     assets.Sounds.player_death.play()
     config.game_over = True
-    if config.score > config.high_score:
+    if config.score == config.high_score:
         config.high_score = config.score
         with open(config.HIGH_SCORE_FILE, "w") as file:
             file.write(str(config.high_score))
@@ -62,9 +61,33 @@ def draw_game_over_ui(surface):
     # 3. Blit the overlay onto the main screen
     surface.blit(overlay, (0, 0))
 
-    # 4. Draw your text on top
+    # 4. Let the game know that the game over UI was shown
+    config.game_over_ui_shown = True
 
-    surface.blit(assets.Textures.UI.game_over, (config.Screen.Size.w/2 - assets.Textures.UI.game_over.width/2, config.Screen.Size.h/2 - assets.Textures.UI.game_over.height/2))
+    if config.score > config.high_score:
+        config.high_score = config.score
+    else:
+        with open(config.HIGH_SCORE_FILE, "r") as file:
+            config.high_score = int(file.read().strip())
+
+    # 5. Create text lines
+    if config.score < config.high_score:
+        score_go_str = monocraft.render(f"Score: {config.score}", True, (255, 255, 255))
+        print("Regular Score")
+    else:
+        score_go_str = monocraft.render(f"New High Score!", True, (255, 180, 0))
+        print("")
+    hi_score_go_str = monocraft.render(f"High Score: {config.high_score}", True, (255, 255, 255))
+
+    ins_restart = monocraft.render(f"Press \"{pygame.key.name(config.Keybinds.restart_key, False)}\" to Restart Game", True, (255, 255, 255))
+
+    # 6. Draw the UI on top
+    surface.blit(assets.Textures.UI.game_over, (318, 225))
+    surface.blit(score_go_str, (318, 275))
+    surface.blit(hi_score_go_str, (318, 315))
+
+    surface.blit(ins_restart, (215, 500))
+
 
 if not config.HIGH_SCORE_FILE_EXISTS:
     with open(config.HIGH_SCORE_FILE, "w") as file:
@@ -79,10 +102,17 @@ while config.Game.running:
     FPS.tick(60)
 
     config.frame += 1
+<<<<<<< HEAD
     
     timer_str = assets.monocraft.render(f"{config.powerup_type_text}: {config.powerup_timer}", True, (255,255,255))
     score_str = assets.monocraft.render(f"{config.score}", True, (255,255,255))
     high_score_str = assets.monocraft.render(f"{config.high_score}", True, (255,255,255))
+=======
+
+    timer_str = monocraft.render(f"{config.powerup_type_text}: {config.powerup_timer}", True, (255,255,255))
+    score_str = monocraft.render(f"Sc: {config.score}", True, (255,255,255))
+    high_score_str = monocraft.render(f"Hi: {config.high_score}", True, (255,255,255))
+>>>>>>> 8da15c44f4c070c58bb4faba08c2557537738336
 
     if config.error != 0:
         config.Game.running = False
@@ -106,6 +136,8 @@ while config.Game.running:
                             config.score += 10
                         else:
                             config.score += config.score * 10
+                    if event.key == pygame.K_1:
+                        game_over()
                 if event.key == pygame.K_SPACE or event.key == pygame.K_z:
                     if config.game_over == False:
                         # Create the bullet at the player's current position
@@ -289,7 +321,7 @@ while config.Game.running:
                     config.powerup_timer = 16
                     player.invincible = True
                     config.powerup_active = True
-                    assets.load_music(assets.Music.invincibility)
+                    assets.load_music(assets.Music.invincibility, "wav")
                     pygame.mixer.music.play()
                     config.powerup_type_text = "Invincibility"
                     
@@ -298,8 +330,16 @@ while config.Game.running:
 
             p.draw(SCR) # Draw it here
 
+<<<<<<< HEAD
         SCR.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
         SCR.blit(assets.Textures.UI.panel_02, (config.Screen.Size.w-246, config.Screen.Size.h-195))
+=======
+        if config.score > config.high_score:
+            config.high_score = config.score
+
+        scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
+        scr.blit(assets.Textures.UI.panel_02, (config.Screen.Size.w-246, config.Screen.Size.h-195))
+>>>>>>> 8da15c44f4c070c58bb4faba08c2557537738336
 
         # Modifies the X position of score and high score when a new digit is reached, like if you go from 9 to 10
         text_width = score_str.get_width()
@@ -313,8 +353,9 @@ while config.Game.running:
         SCR.blit(score_str, (score_x_pos, 20+config.Screen.Size.h-187))
         SCR.blit(high_score_str, (hi_x_pos, 87+config.Screen.Size.h-187))
 
-        # This ensures the score never exceeds 9,999,999,999
-        config.score = min(config.score, 9999999999)
+        # This ensures the score never exceeds 999,999
+        config.score = min(config.score, 999999)
+        config.high_score = min(config.high_score, 999999)
 
         # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
         pygame.draw.rect(SCR, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
@@ -366,6 +407,7 @@ while config.Game.running:
             if event.type == pygame.QUIT:
                 config.Game.running = False
             if event.type == pygame.KEYDOWN:
+<<<<<<< HEAD
                 if event.key == pygame.K_r: # Example: Restart game
                     # Reset your variables here
                     config.game_over = False
@@ -398,6 +440,32 @@ while config.Game.running:
             # 1. Background Bar (The gray slot)
             # Starts at 507, width 400 (507 + 400 = 907)
             pygame.draw.rect(SCR, config.BACKGROUND_AMMO_COLOR, (507, 656, 400, 25))
+=======
+                if event.key == pygame.K_r:
+                    pygame.quit()
+                    subprocess.run("python ./main.py", shell=True)
+
+        if not config.game_over_ui_shown:
+            scr.blit(assets.Textures.UI.panel_01, (0, config.Screen.Size.h-45))
+
+            config.HEALTH_COLOR_DRAIN = config.BACKGROUND_HEALTH_COLOR
+
+            # pygame.draw.rect(surface, (51, 255, 51), self.rect, 1)
+            pygame.draw.rect(scr, config.BACKGROUND_HEALTH_COLOR, (15, 656, 400, 25))
+
+            pygame.draw.rect(scr, config.HEALTH_COLOR_DRAIN, (15, 656, player.health_drain*4, 25))
+
+            if player.health > 50:
+                pygame.draw.rect(scr, config.HEALTH_COLOR_HIGH, (15, 656, player.health*4, 25))
+            if 50 >= player.health > 25:
+                pygame.draw.rect(scr, config.HEALTH_COLOR_MED, (15, 656, player.health*4, 25))
+            if player.health <= 25:
+                pygame.draw.rect(scr, config.HEALTH_COLOR_LOW, (15, 656, player.health*4, 25))
+
+            # 1. Background Bar (The gray bg)
+            # Starts at 507, width 400 (507 + 400 = 907)
+            pygame.draw.rect(scr, config.BACKGROUND_ENERGY_COLOR, (507, 656, 400, 25))
+>>>>>>> 8da15c44f4c070c58bb4faba08c2557537738336
 
             # 2. The Draining Logic
             # We calculate the width first
@@ -409,10 +477,17 @@ while config.Game.running:
 
             # 3. Draw the Energy Bar (Yellow)
             if player.energy > 0:
+<<<<<<< HEAD
                 pygame.draw.rect(SCR, config.AMMO_COLOR, (reverse_x, 656, energy_width, 25))
 
             # Draw the transparent GUI
             draw_game_over_ui(SCR)
+=======
+                pygame.draw.rect(scr, config.ENERGY_COLOR, (reverse_x, 656, energy_width, 25))
+
+            # Draw the transparent GUI
+            draw_game_over_ui(scr)
+>>>>>>> 8da15c44f4c070c58bb4faba08c2557537738336
 
     pygame.display.flip()
 

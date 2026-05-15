@@ -1,5 +1,7 @@
 "Module for Assets"
 
+import pathlib
+
 import pygame
 
 import config
@@ -16,6 +18,7 @@ try:
     class RawTextures:
         """Base Class for Unscaled Textures, Only use for scaling!"""
         # Player
+<<<<<<< HEAD
         player_blank_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/player/player-1.png").convert_alpha()
         player0_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/player/player0.png").convert_alpha()
 
@@ -32,6 +35,23 @@ try:
 
         # UI
         game_over_unscaled = pygame.image.load(f"{config.WIN_PATH}/textures/ui/txt/game_over.png").convert_alpha()
+=======
+        player0_unscaled = pygame.image.load(pathlib.Path(f"{config.WIN_PATH}/textures/player/player0.png"))
+
+        # Enemy
+        enemy0_unscaled = pygame.image.load(pathlib.Path(f"{config.WIN_PATH}/textures/enemy/enemy0.png"))
+
+        # Bullet
+        bullet_blank_unscaled = pygame.image.load(pathlib.Path(f"{config.WIN_PATH}/textures/bullet/bullet-1.png"))
+
+        # Powerup
+        wrench_unscaled = pygame.image.load(pathlib.Path(f"{config.WIN_PATH}/textures/powerUp/powerUp0.png"))
+        power_wrench_unscaled = pygame.image.load(pathlib.Path(f"{config.WIN_PATH}/textures/powerUp/powerUp1.png"))
+        ammo_unscaled = pygame.image.load(pathlib.Path(f"{config.WIN_PATH}/textures/powerUp/powerUp2.png"))
+
+        # UI
+        game_over_unscaled = pygame.image.load(pathlib.Path(f"{config.WIN_PATH}/textures/ui/txt/game_over.png"))
+>>>>>>> 8da15c44f4c070c58bb4faba08c2557537738336
 
 
     class Textures:
@@ -62,23 +82,28 @@ try:
 
         class UI:
             """UI Class for Textures"""
+<<<<<<< HEAD
             panel_01 = pygame.image.load(f"{config.WIN_PATH}/textures/ui/panel/panel_01.png").convert_alpha()
             panel_02 = pygame.image.load(f"{config.WIN_PATH}/textures/ui/panel/panel_02.png").convert_alpha()
+=======
+            panel_01 = pygame.image.load(pathlib.Path(f"{config.WIN_PATH}/textures/ui/panel/panel_01.png"))
+            panel_02 = pygame.image.load(pathlib.Path(f"{config.WIN_PATH}/textures/ui/panel/panel_02.png"))
+>>>>>>> 8da15c44f4c070c58bb4faba08c2557537738336
             game_over = pygame.transform.scale_by(RawTextures.game_over_unscaled, config.SPRITE_SCALING)
 
 
     class Sounds:
         """Base Class for Sounds"""
 
-        entity_damage = pygame.mixer.Sound(f"{config.WIN_PATH}/sounds/entity_damage.wav")
-        player_death = pygame.mixer.Sound(f"{config.WIN_PATH}/sounds/player_death.wav")
-        player_shoot = pygame.mixer.Sound(f"{config.WIN_PATH}/sounds/player_shoot.wav")
+        entity_damage = pygame.mixer.Sound(pathlib.Path(f"{config.WIN_PATH}/sounds/entity_damage.wav"))
+        player_death = pygame.mixer.Sound(pathlib.Path(f"{config.WIN_PATH}/sounds/player_death.wav"))
+        player_shoot = pygame.mixer.Sound(pathlib.Path(f"{config.WIN_PATH}/sounds/player_shoot.wav"))
 
 
     class Music:
         """Base Class for Music"""
 
-        invincibility = f"{config.WIN_PATH}/music/invincibility.wav"
+        invincibility = pathlib.Path(f"{config.WIN_PATH}/music/invincibility.wav")
 
 
     def load_music(song, songhint: str = ""):
@@ -89,6 +114,11 @@ except Exception as e:
     config.error_text = f"An error occured while loading one or more assets!\nError: {e}"
     # This automatically gets the current file's absolute path
     config.error_origin = config.pathlib.Path(__file__).resolve()
+
+    print(f"Error Loading One or More Assets ({config.error})")
+    print(f"Details of Error: {config.error_text}")
+    print(f"Error Came From: {config.error_origin}")
+    print(f"Current Working Directory: {config.WIN_PATH}")
 
 
 # -------------------------------------
